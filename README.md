@@ -65,15 +65,6 @@ GitHub Actions在主分支更新后自动校验预设、测试、构建和发布
 
 也可部署项目提供的 `deploy/enka-worker.ts`，把地址设为仓库变量 `VITE_ENKA_API_BASE`；配置后优先使用自有服务。本地dev/preview继续使用内置转发接口。
 
-**支持网页与Enka接口一起部署到Cloudflare Workers，用户直接在网站输入UID即可。** 仓库根目录的 `wrangler.jsonc` 同时发布前端资源和 `/api/enka/{uid}` 接口，不经过公共代理，也不需要为前端填写另一个服务地址：
-
-```sh
-npm ci
-npx wrangler login
-npm run deploy:cloudflare
-```
-
-部署需要站点作者的Cloudflare账号；GitHub令牌不能代替Cloudflare登录。命令成功后会输出实际网站地址。GitHub Pages继续保留，但它不支持执行后端，因此不会因为仓库里增加Worker文件而自动拥有内置接口。详细部署与验证步骤见 [GitHub在线部署](docs/GitHub在线部署.md)。
 
 ## 公式与许可
 

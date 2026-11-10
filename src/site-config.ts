@@ -7,7 +7,10 @@ export const SITE = {
     "https://github.com/WYH827/GenshinDamageCalculator",
   website:
     import.meta.env.VITE_SITE_URL ||
-    "https://wyh827.github.io/GenshinDamageCalculator/",
+    (import.meta.env.VITE_SITE_PUBLISHED === "true" &&
+    typeof location !== "undefined"
+      ? new URL(import.meta.env.BASE_URL, location.href).href
+      : "https://wyh827.github.io/GenshinDamageCalculator/"),
   published: import.meta.env.VITE_SITE_PUBLISHED === "true",
 };
 export function enkaApiUrl(uid: string) {
@@ -17,8 +20,9 @@ export function enkaApiUrl(uid: string) {
   );
   if (endpoint) return `${endpoint}/api/enka/${uid}`;
   if (import.meta.env.VITE_STATIC_HOST === "true")
-    throw new Error(
-      "在线版尚未配置UID查询服务，可先用JSON快速导入；作者配置Enka接口后即可使用UID查询。",
-    );
+    return `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://enka.network/api/uid/${uid}/`)}`;
   return `/api/enka/${uid}`;
 }
+export const usesPublicEnkaRelay = () =>
+  import.meta.env.VITE_STATIC_HOST === "true" &&
+  !import.meta.env.VITE_ENKA_API_BASE?.trim();

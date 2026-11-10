@@ -9,7 +9,11 @@
     "preview": "vite preview --host 127.0.0.1",
     "test:e2e": "playwright test",
     "format": "prettier --write src tests *.ts *.json index.html README.md",
-    "check:presets": "vitest run src/official-presets.test.ts"
+    "check:presets": "vitest run src/official-presets.test.ts",
+    "build:cloudflare": "node scripts/build-cloudflare.mjs",
+    "preview:cloudflare": "wrangler dev",
+    "deploy:cloudflare": "wrangler deploy",
+    "check:cloudflare": "wrangler deploy --dry-run --outdir verification/cloudflare-dry-run"
   },
   "keywords": [],
   "author": "WYH827",
@@ -29,7 +33,8 @@
     "prettier": "^3.9.10",
     "typescript": "^7.0.2",
     "vite": "^8.3.6",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "wrangler": "^4.160.0"
   },
   "private": true
 }

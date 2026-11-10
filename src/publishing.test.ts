@@ -28,7 +28,9 @@ describe("static host and Enka deployment", () => {
     vi.stubEnv("VITE_ENKA_API_BASE", "");
     expect(enkaApiUrl("123456789")).toBe("/api/enka/123456789");
     vi.stubEnv("VITE_STATIC_HOST", "true");
-    expect(() => enkaApiUrl("123456789")).toThrow("尚未配置");
+    expect(enkaApiUrl("123456789")).toBe(
+      "https://api.allorigins.win/raw?url=https%3A%2F%2Fenka.network%2Fapi%2Fuid%2F123456789%2F",
+    );
     vi.stubEnv("VITE_ENKA_API_BASE", "https://example.workers.dev/");
     expect(enkaApiUrl("123456789")).toBe(
       "https://example.workers.dev/api/enka/123456789",

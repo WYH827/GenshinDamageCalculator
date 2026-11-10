@@ -1,5 +1,6 @@
 import CharacterVisual from "./CharacterVisual";
-import { enkaApiUrl } from "./site-config";
+import { usesPublicEnkaRelay } from "./site-config";
+import { fetchEnka } from "./enka-client";
 import EquipmentVisual from "./EquipmentVisual";
 import { useEffect, useRef, useState } from "react";
 import { CharacterSelect, Field, Modal } from "./components";
@@ -106,20 +107,7 @@ export default function QuickImport({
     setError("");
     setAccount(null);
     try {
-      const r = await fetch(enkaApiUrl(uidValue.trim()), {
-        signal: controller.signal,
-      });
-      if (!r.headers.get("content-type")?.includes("application/json"))
-        throw new Error(
-          "当前服务未启用Enka接口，请使用启动工作台或npm run preview运行",
-        );
-      const json = await r.json();
-      if (!r.ok)
-        throw new Error(
-          typeof json.error === "string"
-            ? json.error
-            : `读取失败（${r.status}）`,
-        );
+      const json = await fetchEnka(uidValue.trim(), controller.signal);
       if (id === sequence.current) select(parseEnkaImport(json));
     } catch (e) {
       if (id === sequence.current && !controller.signal.aborted)
@@ -252,6 +240,19 @@ export default function QuickImport({
             </a>{" "}
             仅返回公开展柜角色，请在游戏中开启“显示角色详情”。数据受接口缓存影响。
           </p>
+          {usesPublicEnkaRelay() && (
+            <p className="input-note">
+              在线版通过{" "}
+              <a
+                href="https://allorigins.win/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                AllOrigins
+              </a>{" "}
+              公共服务转发Enka请求，UID将发送给该服务。无需登录；服务繁忙时可重试或使用JSON导入。
+            </p>
+          )}
         </div>
       )}
       {loading && <p role="status">正在读取角色数据…</p>}

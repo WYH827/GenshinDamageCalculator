@@ -22,11 +22,11 @@
 
 官方预设位于 [`public/presets`](public/presets)，分为：
 
-| 目录 | 内容 |
-| --- | --- |
+| 目录                                | 内容                                    |
+| ----------------------------------- | --------------------------------------- |
 | [方案预设](public/presets/方案预设) | 整队配置 + 技能效果 + 敌方参数 + 时间轴 |
-| [角色](public/presets/角色) | 单个角色预设 |
-| [武器](public/presets/武器) | 武器主副词条与效果预设 |
+| [角色](public/presets/角色)         | 单个角色预设                            |
+| [武器](public/presets/武器)         | 武器主副词条与效果预设                  |
 
 **欢迎通过 Pull Request 上传预设，作者审核后放入官方预设库。**
 
@@ -57,11 +57,23 @@ npm run preview
 
 Windows也可运行 `启动工作台.cmd`。`npm run test:e2e` 使用Windows Microsoft Edge进行浏览器测试。
 
-## GitHub Pages 与 Enka
+## 在线部署与内置 Enka 接口
 
 GitHub Actions在主分支更新后自动校验预设、测试、构建和发布Pages。部署说明见 [GitHub在线部署](docs/GitHub在线部署.md)。
 
-**Pages上的计算、JSON导入和官方预设库不需要后端。Enka UID查询需要额外的转发服务**（Enka官方API不允许直接浏览器跨域请求）。项目提供 `deploy/enka-worker.ts`，部署后将地址设置为仓库变量 `VITE_ENKA_API_BASE` 并重新发布。未配置时网页明确提示，可继续用JSON导入；本地dev/preview自带转发服务。
+**在线版可直接输入UID使用Enka，无需自行部署服务。** 默认通过 [AllOrigins](https://allorigins.win/) 公共服务转发（UID会经过该服务），依次尝试JSON包装和原始JSON接口，并按Enka TTL缓存。服务偶尔繁忙或跨域失败时会明确提示，可重试或使用JSON导入。
+
+也可部署项目提供的 `deploy/enka-worker.ts`，把地址设为仓库变量 `VITE_ENKA_API_BASE`；配置后优先使用自有服务。本地dev/preview继续使用内置转发接口。
+
+**支持网页与Enka接口一起部署到Cloudflare Workers，用户直接在网站输入UID即可。** 仓库根目录的 `wrangler.jsonc` 同时发布前端资源和 `/api/enka/{uid}` 接口，不经过公共代理，也不需要为前端填写另一个服务地址：
+
+```sh
+npm ci
+npx wrangler login
+npm run deploy:cloudflare
+```
+
+部署需要站点作者的Cloudflare账号；GitHub令牌不能代替Cloudflare登录。命令成功后会输出实际网站地址。GitHub Pages继续保留，但它不支持执行后端，因此不会因为仓库里增加Worker文件而自动拥有内置接口。详细部署与验证步骤见 [GitHub在线部署](docs/GitHub在线部署.md)。
 
 ## 公式与许可
 

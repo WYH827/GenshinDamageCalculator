@@ -12,11 +12,13 @@ export async function queryEnka(uid: string) {
     try {
       const r = await fetch(`https://enka.network/api/uid/${uid}/`, {
         headers: {
-          "User-Agent": "TeyvatDamageStudio/0.1 (local equipment importer)",
+          "User-Agent":
+            "TeyvatDamageStudio/0.1 (+https://github.com/WYH827/GenshinDamageCalculator)",
           Accept: "application/json",
         },
         signal: AbortSignal.timeout(20000),
-        redirect: "error",
+        // Workers supports manual redirects; never follow an unexpected target.
+        redirect: "manual",
       });
       const error = (
         {
@@ -51,7 +53,11 @@ export async function queryEnka(uid: string) {
       const result = { status: 200, body };
       cache.set(uid, { ...result, expires: Date.now() + ttl * 1000 });
       return result;
-    } catch {
+    } catch (error) {
+      console.warn(
+        "Enka upstream request failed",
+        error instanceof Error ? error.message : "unknown error",
+      );
       return {
         status: 502,
         body: JSON.stringify({

@@ -244,13 +244,14 @@ export default function QuickImport({
             <p className="input-note">
               在线版通过{" "}
               <a
-                href="https://allorigins.win/"
+                href="https://jina.ai/reader/"
                 target="_blank"
                 rel="noreferrer"
               >
-                AllOrigins
+                Jina Reader
               </a>{" "}
-              公共服务转发Enka请求，UID将发送给该服务。无需登录；服务繁忙时可重试或使用JSON导入。
+              读取Enka公开JSON，UID将发送给该服务。无需登录或API
+              Key；数据有缓存，查询过快时请等待后重试。
             </p>
           )}
         </div>

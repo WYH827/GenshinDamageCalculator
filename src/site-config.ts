@@ -20,7 +20,7 @@ export function enkaApiUrl(uid: string) {
   );
   if (endpoint) return `${endpoint}/api/enka/${uid}`;
   if (import.meta.env.VITE_STATIC_HOST === "true")
-    return `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://enka.network/api/uid/${uid}/`)}`;
+    return `https://r.jina.ai/https://enka.network/api/uid/${uid}/`;
   return `/api/enka/${uid}`;
 }
 export const usesPublicEnkaRelay = () =>

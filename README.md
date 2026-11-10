@@ -61,7 +61,7 @@ Windows也可运行 `启动工作台.cmd`。`npm run test:e2e` 使用Windows Mic
 
 GitHub Actions在主分支更新后自动校验预设、测试、构建和发布Pages。部署说明见 [GitHub在线部署](docs/GitHub在线部署.md)。
 
-**在线版可直接输入UID使用Enka，无需自行部署服务。** 默认通过 [AllOrigins](https://allorigins.win/) 公共服务转发（UID会经过该服务），依次尝试JSON包装和原始JSON接口，并按Enka TTL缓存。服务偶尔繁忙或跨域失败时会明确提示，可重试或使用JSON导入。
+**在线版可直接输入UID使用Enka，无需自行部署服务。** GitHub Pages版通过 [Jina Reader](https://jina.ai/reader/) 公开接口读取Enka原始JSON，不需要API Key、Cloudflare账号或自行部署后端。UID会发送给Jina与Enka。客户端校验来源地址和UID，原样解析数值，按Enka TTL缓存；Reader缓存容忍时间设为60秒。遇到限流遵守Retry-After，不连续重试。
 
 也可部署项目提供的 `deploy/enka-worker.ts`，把地址设为仓库变量 `VITE_ENKA_API_BASE`；配置后优先使用自有服务。本地dev/preview继续使用内置转发接口。
 

@@ -13,7 +13,7 @@
 3. `.github/workflows/pages.yml` 会安装锁定依赖、运行单元测试、构建并发布 `dist`。也可从 Actions 手动运行。
 4. Vite 使用相对资源路径，支持项目子目录；头像、SVG、计算 Worker 和懒加载模块随构建输出，浏览器计算不需要服务器。
 
-## 网页与 Enka 接口一体化部署（Cloudflare Workers）
+## 可选：网页与 Enka 接口一体化部署（Cloudflare Workers）
 
 网站可以内置Enka转发，前提是托管平台能执行后端。已核对GGArtifact公开源码：它的前端调用同域 `/api/enka/uid/`，由Cloudflare Worker请求Enka，浏览器并非直接跨域请求Enka。
 
@@ -33,9 +33,13 @@ npm run deploy:cloudflare
 
 GitHub仓库仍用于源码、预设PR与版本管理，现有Pages不会被关闭。若以后改用新域名，浏览器数据不会自动迁移，请在原站导出JSON，再到新站导入。
 
-## 保留 GitHub Pages 时的 UID 查询
+## GitHub Pages 的 UID 查询（默认，无需额外部署）
 
-GitHub Pages 没有后端，不能运行本地的 Vite Enka 中间件。在线版默认通过AllOrigins公共转发提供UID查询，无需额外部署；若要改用自有服务，可部署 `deploy/enka-worker.ts`：
+GitHub Pages直接向 `https://r.jina.ai/https://enka.network/api/uid/{uid}/` 请求JSON，无需API Key或迁移网站。请求使用 `Accept: application/json`、`X-Engine: curl`、`X-Cache-Tolerance: 60`，仅从返回的 `data.content` 解析原始JSON，不做文本提取或数值推断。校验来源URL和返回UID，拒绝HTML、截断文本及错误响应。客户端尊重Enka TTL与限流的Retry-After。
+
+已核对 starrailoptimizer.github.io 的部署JS：其前端调用AWS `/prod/profile/{uid}` 接口，因此Pages页面可以通过支持CORS的外部服务完成UID查询；本项目使用支持原神数据的Jina Reader公开接口。参考 [Reader官方说明](https://github.com/jina-ai/reader#json-mode)。
+
+若要改用自有服务，可部署 `deploy/enka-worker.ts`：
 
 1. 使用自己的 Cloudflare 账号，在项目根目录运行 `npx wrangler deploy --config deploy/wrangler.toml`（首次使用会要求登录）。此命令会发布服务，留到实际发布时执行。
 2. `ALLOWED_ORIGIN` 默认只允许 `https://wyh827.github.io`。换自定义域名时一并更新。
@@ -48,7 +52,7 @@ GitHub Pages 没有后端，不能运行本地的 Vite Enka 中间件。在线�
 
 - `npm ci`，`npm run dev`：本地编辑和自带UID接口。
 - `npm run build`，`npm run preview`：验证生产构建，同样提供本地UID接口。
-- 静态构建设置 `VITE_STATIC_HOST=true`；没有 `VITE_ENKA_API_BASE` 时通过AllOrigins公共服务查询UID，配置后使用自有接口。
+- 静态构建设置 `VITE_STATIC_HOST=true`；没有 `VITE_ENKA_API_BASE` 时通过Jina Reader公共服务查询UID，配置后使用自有接口。
 - 作者页地址通过 `VITE_SITE_URL` / `VITE_REPOSITORY_URL` 配置。Pages workflow 自动使用当前仓库生成地址，并标为已发布；本地未设置时显示预设地址与未发布状态。
 - 浏览器数据按域名隔离，从本地迁移到网站请先导出方案再导入。
 

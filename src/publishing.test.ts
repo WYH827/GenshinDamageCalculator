@@ -29,7 +29,7 @@ describe("static host and Enka deployment", () => {
     expect(enkaApiUrl("123456789")).toBe("/api/enka/123456789");
     vi.stubEnv("VITE_STATIC_HOST", "true");
     expect(enkaApiUrl("123456789")).toBe(
-      "https://api.allorigins.win/raw?url=https%3A%2F%2Fenka.network%2Fapi%2Fuid%2F123456789%2F",
+      "https://r.jina.ai/https://enka.network/api/uid/123456789/",
     );
     vi.stubEnv("VITE_ENKA_API_BASE", "https://example.workers.dev/");
     expect(enkaApiUrl("123456789")).toBe(

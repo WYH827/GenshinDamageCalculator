@@ -1,0 +1,6 @@
+name = "teyvat-enka-api"
+main = "enka-worker.ts"
+compatibility_date = "2026-10-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://wyh827.github.io"

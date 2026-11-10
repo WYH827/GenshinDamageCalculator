@@ -1,0 +1,127 @@
+{
+  "source": "https://alioth.wiki/gi/formulae",
+  "checkedDate": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "method": "Opened each of the 12 dialogs in Microsoft Edge; compared every rendered KaTeX annotation to the page SSR formula data.",
+  "sections": [
+    {
+      "title": "防御力 抗性",
+      "formulaBlocks": 3,
+      "allFormulaeMatched": true,
+      "formulaSha256": [
+        "13dc53f83a32dff95df5b5c27748095106a83003e3bf26ce1d5b7828e60e64d1",
+        "f764473ae36d56f1720ed2d22c55845dbb3cc487bddfae5fb909ccdd258c767b",
+        "ef62cacfc958eb0b112556e7676288220ea0bf8eeb8ca6a330dfd3e54538a97a"
+      ]
+    },
+    {
+      "title": "常规伤害",
+      "formulaBlocks": 1,
+      "allFormulaeMatched": true,
+      "formulaSha256": [
+        "0766b9aff37ce3bb00074afca7c1393d805741aa724618913f5879bf1f453260"
+      ]
+    },
+    {
+      "title": "星月反应系数",
+      "formulaBlocks": 0,
+      "allFormulaeMatched": true,
+      "formulaSha256": []
+    },
+    {
+      "title": "星扩散",
+      "formulaBlocks": 4,
+      "allFormulaeMatched": true,
+      "formulaSha256": [
+        "2e1e5f24b0e36e1110f7a20d4efdf03108fd48acb0dfdbc1f26dfa4ff04b96e6",
+        "bc2feba659f78f660a14e5add4eeeef7c316e9d6f35e0c398fd918024325edec",
+        "830ebccd4ae15fcb671301121f264eda54d869b8e8376a2f5bff7af5fdf19934",
+        "987b343091220d9046fe3875a073d2e04a9ec7b8fd1bec7fef43bc4acaece7e5"
+      ]
+    },
+    {
+      "title": "星超导",
+      "formulaBlocks": 2,
+      "allFormulaeMatched": true,
+      "formulaSha256": [
+        "e9898ba895cb55ce3fd070ff9d3141fe75825a260c4bbf81b5c3a43f856825c9",
+        "c718dc6b2e1630cfc2177df506a82c283c211a7024edff6b04ab0a54df652595"
+      ]
+    },
+    {
+      "title": "月结晶",
+      "formulaBlocks": 4,
+      "allFormulaeMatched": true,
+      "formulaSha256": [
+        "a2cd197200bbc5045291ed0230055da31a02efd30b472dcb945f7565aa9573a1",
+        "2d8fd3cafd0f095eca0197cfb74b2a767b2d13102f735202c6b089002ac28363",
+        "82901f9fc20ef598dcd69a90cf60899aefb608ec24bfc8f60be463848e2d1452",
+        "bc2feba659f78f660a14e5add4eeeef7c316e9d6f35e0c398fd918024325edec"
+      ]
+    },
+    {
+      "title": "月感电",
+      "formulaBlocks": 4,
+      "allFormulaeMatched": true,
+      "formulaSha256": [
+        "9dd52db34a1545beacbb5777efc6ca83efffa30202e38e7b595bb32f80b2b966",
+        "2d8fd3cafd0f095eca0197cfb74b2a767b2d13102f735202c6b089002ac28363",
+        "a8a5ff470e4ec03ab256d7d7094e54dc4e88facbc047891d4e62b11480598343",
+        "bc2feba659f78f660a14e5add4eeeef7c316e9d6f35e0c398fd918024325edec"
+      ]
+    },
+    {
+      "title": "月绽放",
+      "formulaBlocks": 2,
+      "allFormulaeMatched": true,
+      "formulaSha256": [
+        "f0fe863638673d928ba625cf22e2b2216ee79a3557dab864465c55b9e472d638",
+        "96e75f45d7f87711b93c366ac3df6580196a3bb16aa860d1ddac07a3e831678a"
+      ]
+    },
+    {
+      "title": "激化反应",
+      "formulaBlocks": 2,
+      "allFormulaeMatched": true,
+      "formulaSha256": [
+        "9b20ca2f624b8a72393dd161a6fdb39f4d9ec79e60a899d340bbbc76faf87fe5",
+        "809f82c09ffca995d70cee3e3cf409fdefa7644e97d9ee7508b16849251d461e"
+      ]
+    },
+    {
+      "title": "剧变反应",
+      "formulaBlocks": 2,
+      "allFormulaeMatched": true,
+      "formulaSha256": [
+        "5c77faeac4b931e3a3c6c5bb918de049c29c6bb7588bf0d9f179b827856a87e2",
+        "0812c6b6ca48c61ab153378e8ce9676d44029587a36aabe951abc54009d1ae91"
+      ]
+    },
+    {
+      "title": "增幅反应",
+      "formulaBlocks": 2,
+      "allFormulaeMatched": true,
+      "formulaSha256": [
+        "77576f9c0a8750c7420c1cf41c2f7d598f95e223b3c7d203de315c4d7cfd0b85",
+        "ee95fce576dd3ecf589dea58cc582d5fc16610fc59f915c4810e94d9f618946e"
+      ]
+    },
+    {
+      "title": "结晶反应",
+      "formulaBlocks": 1,
+      "allFormulaeMatched": true,
+      "formulaSha256": [
+        "a8a2268ca1a38ca7886e66e9af30f9a988d6b6b5d8db3d89f2895d23c74ded21"
+      ]
+    }
+  ],
+  "sectionCount": 12,
+  "formulaBlockCount": 27,
+  "sourceDataSha256": "071c2f4fb7f9e02941b59a0b0c57d579471ed833e843c5ab24dc0f4a0aa4f646",
+  "confirmedUserRule": "0 秒基础面板只含角色与装备静态属性，不含任何效果。",
+  "notes": [
+    "All 12 subinterfaces are dialogs on the same URL.",
+    "The lunar electro-charged reaction formula has a mislabeled lunar crystallize left-hand title; its right-hand side uses coefficient 3 and lunar electro-charged bonus.",
+    "27 counts displayed formula blocks, including repeated final-damage and weighting formulae. Inline formulae and coefficient tables are additionally explained in the plan."
+  ]
+}

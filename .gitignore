@@ -1,0 +1,16 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+verification/
+*.local
+*.tsbuildinfo
+.research/
+
+.env
+.env.*
+!.env.example
+.wrangler/
+
+# Private configuration audit; retained locally only.
+docs/星超导伤害核对-方案4.md

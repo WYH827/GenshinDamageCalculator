@@ -9,7 +9,11 @@ const cache = new Map<
 >();
 const pending = new Map<string, Promise<{ body: string; status: number }>>();
 export async function queryEnka(uid: string, source: EnkaSource = "enka") {
-  const url = enkaSourceUrl(uid, source),
+  const sourceUrl = enkaSourceUrl(uid, source);
+  // Keep the browser's direct option on HTTPS; only this server-side upstream
+  // uses HTTP to avoid MicroGG's Cloudflare-to-origin TLS handshake failure.
+  const url =
+      source === "microgg" ? sourceUrl.replace(/^https:/, "http:") : sourceUrl,
     key = `${source}:${uid}`,
     name = ENKA_SOURCES[source];
   const saved = cache.get(key);

@@ -31,7 +31,7 @@ it("routes all fixed sources and keeps same-UID caches and concurrent requests s
   expect(fetcher).toHaveBeenCalledTimes(3);
   expect(fetcher.mock.calls.map((c) => c[0])).toEqual([
     "https://enka.network/api/uid/123456789/",
-    "https://profile.microgg.cn/api/uid/123456789",
+    "http://profile.microgg.cn/api/uid/123456789",
     "http://enka.microgg.cn/u/123456789/__data.json",
   ]);
   const json = await Promise.all(rows.map((r) => r.json()));

@@ -35,7 +35,7 @@ GitHub仓库仍用于源码、预设PR与版本管理，现有Pages不会被关�
 
 ## GitHub Pages 的 UID 查询
 
-UID导入提供三个直连和三个Cloudflare转发：Enka官方、MicroGG API、MicroGG网页JSON。默认使用 `https://enka-api.wyh827.workers.dev/api/enka/{uid}?source=microgg`，转发至 `https://profile.microgg.cn/api/uid/{uid}`。`source=enka`（或省略source）使用Enka官方，`source=page` 使用 `http://enka.microgg.cn/u/{uid}/__data.json`。
+UID导入提供三个直连和三个Cloudflare转发：Enka官方、MicroGG API、MicroGG网页JSON。默认使用 `https://enka-api.wyh827.workers.dev/api/enka/{uid}?source=microgg`，转发至 `http://profile.microgg.cn/api/uid/{uid}`；MicroGG API直连仍用HTTPS。`source=enka`（或省略source）使用Enka官方，`source=page` 使用 `http://enka.microgg.cn/u/{uid}/__data.json`。
 
 只接受三个固定数据源及合法UID，不接受任意URL代理。转发缓存、并发合并与429退避按来源和UID区分；改变接口取消旧请求并清空预览，不自动更换数据来源。
 
@@ -66,4 +66,4 @@ UID导入提供三个直连和三个Cloudflare转发：Enka官方、MicroGG API�
 
 发布内容不包括 `node_modules`、`verification`、临时截图、测试报告或用户下载目录中的方案。作者头像和第三方素材说明见 `THIRD_PARTY_NOTICES.md`，代码许可见 `LICENSE`。
 
-2026-11-12六来源部署实测：Cloudflare转发MicroGG网页JSON返回12个角色，Enka官方示例返回4个角色；MicroGG API经Cloudflare请求返回525（上游TLS握手失败），接口提供明确提示并允许手动切换，未自动改为HTTP或其它来源。
+2026-11-12六来源部署实测：Cloudflare转发MicroGG网页JSON返回12个角色，Enka官方示例返回4个角色；MicroGG API的HTTPS转发返回525，按用户要求改为HTTP后返回409，未自动更换来源，仍可手动切换至另外两个转发选项。

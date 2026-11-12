@@ -1,4 +1,5 @@
 import { queryEnka } from "../server/enka-service";
+import { isEnkaSource } from "../shared/enka-sources";
 type Env = { ALLOWED_ORIGIN?: string };
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -21,12 +22,14 @@ export default {
       return new Response(null, { status: 204, headers });
     if (request.method !== "GET")
       return respond(405, JSON.stringify({ error: "仅支持GET" }));
-    const uid = /^\/api\/enka\/([1-9]\d{8,9})\/?$/.exec(
-      new URL(request.url).pathname,
-    )?.[1];
+    const url = new URL(request.url);
+    const uid = /^\/api\/enka\/([1-9]\d{8,9})\/?$/.exec(url.pathname)?.[1];
     if (!uid)
       return respond(400, JSON.stringify({ error: "请输入9或10位数字UID" }));
-    const result = await queryEnka(uid);
+    const source = url.searchParams.get("source") ?? "enka";
+    if (!isEnkaSource(source))
+      return respond(400, JSON.stringify({ error: "未知数据来源" }));
+    const result = await queryEnka(uid, source);
     return respond(result.status, result.body);
   },
 };

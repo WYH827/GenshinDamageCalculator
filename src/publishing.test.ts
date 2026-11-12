@@ -23,23 +23,30 @@ describe("damage reference scale", () => {
   });
 });
 describe("static host and Enka deployment", () => {
-  it("defaults to MicroGG, offers local/static Cloudflare and honors its configured origin", () => {
+  it("offers three direct sources and three proxy routes, defaulting to MicroGG proxy", () => {
     vi.stubEnv("VITE_STATIC_HOST", "");
     vi.stubEnv("VITE_ENKA_API_BASE", "");
-    expect(enkaApiUrl("123456789")).toBe(
+    expect(enkaApiUrl("123456789")).toBe("/api/enka/123456789?source=microgg");
+    expect(enkaApiUrl("123456789", "cloudflare")).toBe("/api/enka/123456789");
+    expect(enkaApiUrl("123456789", "microgg")).toBe(
       "https://profile.microgg.cn/api/uid/123456789",
     );
-    expect(enkaApiUrl("123456789", "cloudflare")).toBe("/api/enka/123456789");
+    expect(enkaApiUrl("123456789", "enka")).toBe(
+      "https://enka.network/api/uid/123456789/",
+    );
+    expect(enkaApiUrl("123456789", "page")).toBe(
+      "http://enka.microgg.cn/u/123456789/__data.json",
+    );
     vi.stubEnv("VITE_STATIC_HOST", "true");
-    expect(enkaApiUrl("123456789", "cloudflare")).toBe(
-      "https://enka-api.wyh827.workers.dev/api/enka/123456789",
+    expect(enkaApiUrl("123456789", "cloudflare-page")).toBe(
+      "https://enka-api.wyh827.workers.dev/api/enka/123456789?source=page",
     );
     vi.stubEnv("VITE_ENKA_API_BASE", "https://example.workers.dev/");
+    expect(enkaApiUrl("123456789")).toBe(
+      "https://example.workers.dev/api/enka/123456789?source=microgg",
+    );
     expect(enkaApiUrl("123456789", "cloudflare")).toBe(
       "https://example.workers.dev/api/enka/123456789",
-    );
-    expect(enkaApiUrl("123456789")).toBe(
-      "https://profile.microgg.cn/api/uid/123456789",
     );
   });
   it("restricts origin, validates UID, handles CORS and uses the shared cached query", async () => {

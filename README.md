@@ -61,7 +61,17 @@ Windows也可运行 `启动工作台.cmd`。`npm run test:e2e` 使用Windows Mic
 
 GitHub Actions在主分支更新后自动校验预设、测试、构建和发布Pages。部署说明见 [GitHub在线部署](docs/GitHub在线部署.md)。
 
-**在线版可直接输入UID导入公开角色展柜，无需登录或自行部署服务。** 在「快速导入 → Enka UID」中选择查询接口：默认直连 [MicroGG](https://profile.microgg.cn/api/)（`/uid/{uid}`），也可切换作者的 [Cloudflare转发接口](https://enka-api.wyh827.workers.dev/) 读取Enka官方数据。UID仅发送至所选接口，数据受各接口缓存影响；切换接口会清空旧预览，需重新点击「读取账号」。MicroGG若因网络或跨域限制读取失败，可手动切换Cloudflare；不会自动更换来源。两种方式均保留单角色与四角色批量导入。自动读取失败时，也可打开对应UID的Enka官方JSON，复制粘贴后预览导入。
+**在线版可直接输入UID导入公开角色展柜，无需登录或自行部署服务。** 「快速导入 → Enka UID」提供三个数据源，各可选择直连或作者的 [Cloudflare转发接口](https://enka-api.wyh827.workers.dev/)：
+
+| 数据源 | 原接口 |
+| --- | --- |
+| MicroGG API | `https://profile.microgg.cn/api/uid/{uid}` |
+| Enka官方 | `https://enka.network/api/uid/{uid}/` |
+| MicroGG网页JSON | `http://enka.microgg.cn/u/{uid}/__data.json` |
+
+**默认使用Cloudflare转发MicroGG API。** 网页仍在GitHub Pages。MicroGG网页JSON的HTTP直连被HTTPS页面作为混合内容拦截，其HTTPS版本本次检查证书已过期，因此需要转发。另两种直连可能受跨域或网络限制。三个转发选项都读取对应数据源，不自动切换来源；缓存、限流按来源分别处理。切换选项清空旧预览并取消旧请求，需重新点击「读取账号」。UID发送至所选数据源，转发时还会经过作者接口。三种数据均沿用单角色/四角色预览导入，失败时可使用官方JSON粘贴导入。
+
+本次部署实测：Cloudflare转发MicroGG网页JSON与Enka官方均能读取；MicroGG API从Cloudflare访问返回上游HTTPS握手错误525，遇到该提示请手动选择前两种可用转发来源。
 
 当前仓库变量 `VITE_ENKA_API_BASE` 为 `https://enka-api.wyh827.workers.dev`。自行部署时可使用 `deploy/enka-worker.ts` 并配置自己的接口地址；本地dev/preview继续使用内置转发接口。
 

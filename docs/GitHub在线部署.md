@@ -35,11 +35,11 @@ GitHub仓库仍用于源码、预设PR与版本管理，现有Pages不会被关�
 
 ## GitHub Pages 的 UID 查询
 
-UID导入默认直连 `https://profile.microgg.cn/api/uid/{uid}`，可在「UID查询接口」选择Cloudflare：`https://enka-api.wyh827.workers.dev`。Cloudflare地址通过仓库变量 `VITE_ENKA_API_BASE` 设置，仅影响Cloudflare选项；网页地址不变。切换接口后取消旧请求并清空预览，必须重新读取，不自动切换数据来源。
+UID导入提供三个直连和三个Cloudflare转发：Enka官方、MicroGG API、MicroGG网页JSON。默认使用 `https://enka-api.wyh827.workers.dev/api/enka/{uid}?source=microgg`，转发至 `https://profile.microgg.cn/api/uid/{uid}`。`source=enka`（或省略source）使用Enka官方，`source=page` 使用 `http://enka.microgg.cn/u/{uid}/__data.json`。
 
-2026-11-12从本站Pages来源实测：MicroGG返回JSON，但当前响应没有 `Access-Control-Allow-Origin`，本机浏览器报CORS读取失败。保留用户要求的MicroGG直连默认选项；遇到此问题手动切换Cloudflare，其接口已实测可读取。两者使用各自的数据与缓存，UID发送至所选服务。Enka官方API也缺少跨域许可，不能用 `no-cors` 读取JSON。
+只接受三个固定数据源及合法UID，不接受任意URL代理。转发缓存、并发合并与429退避按来源和UID区分；改变接口取消旧请求并清空预览，不自动更换数据来源。
 
-自动读取失败时可展开“从Enka官方读取并粘贴JSON”：打开当前UID的官方接口、复制完整JSON并粘贴预览，保持单角色/四角色选择，无需下载文件。
+2026-11-12测试MicroGG网页JSON：HTTP端点返回角色数据，但HTTPS Pages网页禁止混合内容；其HTTPS证书已过期。直连选项保留并明确提示，默认采用Cloudflare转发MicroGG API。其它直连可能受CORS限制。网页与计算继续使用GitHub Pages，Cloudflare只部署转发接口。
 
 若要改用自有服务，可部署 `deploy/enka-worker.ts`：
 
@@ -65,3 +65,5 @@ UID导入默认直连 `https://profile.microgg.cn/api/uid/{uid}`，可在「UID�
 网站资源加载、计算Worker、快速导入懒加载模块、作者头像与元素SVG；手动开始计算；方案导入导出；UID查询；手机布局与常驻多选；站点地址和仓库链接。
 
 发布内容不包括 `node_modules`、`verification`、临时截图、测试报告或用户下载目录中的方案。作者头像和第三方素材说明见 `THIRD_PARTY_NOTICES.md`，代码许可见 `LICENSE`。
+
+2026-11-12六来源部署实测：Cloudflare转发MicroGG网页JSON返回12个角色，Enka官方示例返回4个角色；MicroGG API经Cloudflare请求返回525（上游TLS握手失败），接口提供明确提示并允许手动切换，未自动改为HTTP或其它来源。

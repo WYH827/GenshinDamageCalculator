@@ -1,5 +1,12 @@
 import CharacterVisual from "./CharacterVisual";
-import { ENKA_PROVIDERS, type EnkaProvider } from "./site-config";
+import {
+  ENKA_PROVIDERS,
+  DEFAULT_ENKA_PROVIDER,
+  isProxiedProvider,
+  providerSource,
+  type EnkaProvider,
+} from "./site-config";
+import { ENKA_SOURCES } from "../shared/enka-sources";
 import {
   fetchEnka,
   officialEnkaUrl,
@@ -52,7 +59,7 @@ export default function QuickImport({
     }),
     [sourceKey, setSourceKey] = useState("");
   const [batch, setBatch] = useState(false);
-  const [provider, setProvider] = useState<EnkaProvider>("microgg");
+  const [provider, setProvider] = useState<EnkaProvider>(DEFAULT_ENKA_PROVIDER);
   const [officialOpen, setOfficialOpen] = useState(false),
     [officialText, setOfficialText] = useState("");
   const validUid = /^[1-9]\d{8,9}$/.test(uidValue.trim());
@@ -274,31 +281,16 @@ export default function QuickImport({
             仅返回公开展柜角色，请在游戏中开启“显示角色详情”。数据受接口缓存影响。
           </p>
           <p className="input-note">
-            {provider === "microgg" ? (
-              <>
-                默认直连{" "}
-                <a
-                  href="https://profile.microgg.cn/api/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  MicroGG
-                </a>
-                ，UID发送至该服务。读取失败时可切换Cloudflare。
-              </>
-            ) : (
-              <>
-                通过作者的{" "}
-                <a
-                  href="https://enka-api.wyh827.workers.dev/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Cloudflare接口
-                </a>{" "}
-                转发Enka官方请求，UID发送至该接口与Enka，无需登录。
-              </>
-            )}
+            {isProxiedProvider(provider)
+              ? "通过作者的Cloudflare接口读取"
+              : "直接读取"}
+            {ENKA_SOURCES[providerSource(provider)]}，UID发送至
+            {isProxiedProvider(provider)
+              ? "作者接口及所选数据源"
+              : "所选数据源"}
+            。切换后请重新读取，不会自动更换来源。
+            {provider === "page" &&
+              "HTTPS网站会拦截HTTP直连，请选择对应的Cloudflare转发。"}
           </p>
           <details className="official-enka-fallback" open={officialOpen}>
             <summary

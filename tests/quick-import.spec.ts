@@ -270,7 +270,7 @@ test("source effect editors start folded, including newly added effects", async 
   await expect(page.locator(".effect-form")).toBeHidden();
 });
 
-test("MicroGG is the default and switching providers clears the preview and cancels old requests", async ({
+test("MicroGG proxy is the default and switching providers clears the preview and cancels old requests", async ({
   page,
 }) => {
   const response = {
@@ -292,8 +292,12 @@ test("MicroGG is the default and switching providers clears the preview and canc
   await page.getByRole("button", { name: "快速导入", exact: true }).click();
   await page.getByRole("tab", { name: "Enka UID" }).click();
   await expect(page.getByLabel("UID查询接口", { exact: true })).toHaveValue(
-    "microgg",
+    "cloudflare-microgg",
   );
+  await expect(
+    page.getByLabel("UID查询接口", { exact: true }).locator("option"),
+  ).toHaveCount(6);
+  await page.getByLabel("UID查询接口", { exact: true }).selectOption("microgg");
   await page.getByLabel("原神UID", { exact: true }).fill("618285856");
   await page.getByRole("button", { name: "读取账号", exact: true }).click();
   await expect(page.getByRole("dialog")).toContainText("MicroGG · 1个角色");

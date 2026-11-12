@@ -1,3 +1,4 @@
+import { enkaSourceUrl, type EnkaSource } from "../shared/enka-sources";
 export const SITE = {
   author: "WYH827",
   github: "https://github.com/WYH827",
@@ -14,19 +15,40 @@ export const SITE = {
   published: import.meta.env.VITE_SITE_PUBLISHED === "true",
 };
 export const ENKA_PROVIDERS = {
-  microgg: "MicroGG（默认）",
-  cloudflare: "Cloudflare（Enka官方）",
+  "cloudflare-microgg": "Cloudflare转发 · MicroGG API（默认）",
+  cloudflare: "Cloudflare转发 · Enka官方",
+  "cloudflare-page": "Cloudflare转发 · MicroGG网页JSON",
+  microgg: "直连 · MicroGG API",
+  enka: "直连 · Enka官方",
+  page: "直连 · MicroGG网页JSON（HTTP）",
 } as const;
 export type EnkaProvider = keyof typeof ENKA_PROVIDERS;
-export function enkaApiUrl(uid: string, provider: EnkaProvider = "microgg") {
-  if (provider === "microgg")
-    return `https://profile.microgg.cn/api/uid/${uid}`;
+export const DEFAULT_ENKA_PROVIDER: EnkaProvider = "cloudflare-microgg";
+export const providerSource = (provider: EnkaProvider): EnkaSource =>
+  provider === "cloudflare"
+    ? "enka"
+    : provider === "cloudflare-microgg"
+      ? "microgg"
+      : provider === "cloudflare-page"
+        ? "page"
+        : provider;
+export const isProxiedProvider = (provider: EnkaProvider) =>
+  provider.startsWith("cloudflare");
+export function enkaApiUrl(
+  uid: string,
+  provider: EnkaProvider = DEFAULT_ENKA_PROVIDER,
+) {
+  const source = providerSource(provider);
+  if (!isProxiedProvider(provider)) return enkaSourceUrl(uid, source);
+  enkaSourceUrl(uid, source); // Validate UID for proxy routes too.
   const endpoint = import.meta.env.VITE_ENKA_API_BASE?.trim().replace(
     /\/$/,
     "",
   );
-  if (endpoint) return `${endpoint}/api/enka/${uid}`;
-  if (import.meta.env.VITE_STATIC_HOST === "true")
-    return `https://enka-api.wyh827.workers.dev/api/enka/${uid}`;
-  return `/api/enka/${uid}`;
+  const base =
+    endpoint ||
+    (import.meta.env.VITE_STATIC_HOST === "true"
+      ? "https://enka-api.wyh827.workers.dev"
+      : "");
+  return `${base}/api/enka/${uid}${source === "enka" ? "" : `?source=${source}`}`;
 }

@@ -1,4 +1,10 @@
-import { enkaApiUrl, type EnkaProvider } from "./site-config";
+import {
+  enkaApiUrl,
+  DEFAULT_ENKA_PROVIDER,
+  ENKA_PROVIDERS,
+  isProxiedProvider,
+  type EnkaProvider,
+} from "./site-config";
 const cache = new Map<string, { expires: number; data: unknown }>();
 const retryAt = new Map<string, number>();
 export const officialEnkaUrl = (uid: string) => {
@@ -28,17 +34,25 @@ export function parseOfficialEnkaText(text: string, uid: string): unknown {
 export async function fetchEnka(
   uid: string,
   signal: AbortSignal,
-  provider: EnkaProvider = "microgg",
+  provider: EnkaProvider = DEFAULT_ENKA_PROVIDER,
 ): Promise<unknown> {
   signal.throwIfAborted();
   officialEnkaUrl(uid);
   const url = enkaApiUrl(uid, provider);
-  const saved = provider === "microgg" ? cache.get(url) : undefined;
+  const saved = !isProxiedProvider(provider) ? cache.get(url) : undefined;
   if (saved && saved.expires > Date.now()) return saved.data;
   const wait = (retryAt.get(url) ?? 0) - Date.now();
   if (wait > 0)
     throw new Error(`查询过于频繁，请${Math.ceil(wait / 1000)}秒后重试`);
   try {
+    if (
+      provider === "page" &&
+      typeof location !== "undefined" &&
+      location.protocol === "https:"
+    )
+      throw new Error(
+        "HTTPS网页无法直连HTTP接口，请选择Cloudflare转发 · MicroGG网页JSON",
+      );
     const r = await fetch(url, {
       signal: AbortSignal.any([signal, AbortSignal.timeout(30000)]),
     });
@@ -72,14 +86,14 @@ export async function fetchEnka(
       typeof ttlValue === "number" && Number.isFinite(ttlValue)
         ? Math.max(1, Math.min(ttlValue, 3600))
         : 60;
-    if (provider === "microgg") {
+    if (!isProxiedProvider(provider)) {
       if (cache.size >= 100) cache.delete(cache.keys().next().value!);
       cache.set(url, { data, expires: Date.now() + ttl * 1000 });
     }
     return data;
   } catch (e) {
     if (signal.aborted) throw e;
-    const name = provider === "microgg" ? "MicroGG" : "Cloudflare";
+    const name = ENKA_PROVIDERS[provider];
     const message =
       (e as Error).name === "TimeoutError"
         ? "查询超时"
@@ -88,7 +102,7 @@ export async function fetchEnka(
           ? "网络或跨域读取失败"
           : (e as Error).message;
     throw new Error(
-      `${name}：${message}。${provider === "microgg" ? "可切换Cloudflare后重新读取" : "可切换MicroGG或使用下方官方JSON导入"}`,
+      `${name}：${message}。${!isProxiedProvider(provider) ? "可切换对应的Cloudflare转发后重新读取" : "可切换其它数据来源或使用下方官方JSON导入"}`,
     );
   }
 }

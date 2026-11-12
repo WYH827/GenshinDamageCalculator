@@ -15,15 +15,25 @@ export const SITE = {
   published: import.meta.env.VITE_SITE_PUBLISHED === "true",
 };
 export const ENKA_PROVIDERS = {
-  "cloudflare-microgg": "Cloudflare转发 · MicroGG API（默认）",
+  "cloudflare-page": "Cloudflare转发 · MicroGG网页JSON（默认）",
   cloudflare: "Cloudflare转发 · Enka官方",
-  "cloudflare-page": "Cloudflare转发 · MicroGG网页JSON",
+  "cloudflare-microgg": "Cloudflare转发 · MicroGG API",
   microgg: "直连 · MicroGG API",
   enka: "直连 · Enka官方",
   page: "直连 · MicroGG网页JSON（HTTP）",
 } as const;
 export type EnkaProvider = keyof typeof ENKA_PROVIDERS;
-export const DEFAULT_ENKA_PROVIDER: EnkaProvider = "cloudflare-microgg";
+export const DEFAULT_ENKA_PROVIDER: EnkaProvider = "cloudflare-page";
+export const isDiscouragedProvider = (provider: EnkaProvider) =>
+  provider !== "cloudflare-page" && provider !== "cloudflare";
+// Native select popups do not consistently render CSS text-decoration on Windows.
+// Combining strike marks keep the crossed-out label visible in the popup too.
+export const enkaProviderLabel = (provider: EnkaProvider) =>
+  isDiscouragedProvider(provider)
+    ? Array.from(ENKA_PROVIDERS[provider], (char) =>
+        /\s/.test(char) ? char : `${char}\u0336`,
+      ).join("")
+    : ENKA_PROVIDERS[provider];
 export const providerSource = (provider: EnkaProvider): EnkaSource =>
   provider === "cloudflare"
     ? "enka"

@@ -113,13 +113,13 @@ it("validates UID and cancellation before issuing a request; pasted official JSO
   );
 });
 
-it("defaults to the MicroGG proxy and supports all three raw direct response formats", async () => {
+it("defaults to the MicroGG page proxy and supports all three raw direct response formats", async () => {
   const fetcher = vi.fn(async () => Response.json(data));
   vi.stubGlobal("fetch", fetcher);
   const signal = new AbortController().signal;
   expect(await fetchEnka(uid, signal)).toEqual(data);
   expect(fetcher.mock.calls[0][0]).toBe(
-    `https://enka-api.wyh827.workers.dev/api/enka/${uid}?source=microgg`,
+    `https://enka-api.wyh827.workers.dev/api/enka/${uid}?source=page`,
   );
   await fetchEnka(uid, signal, "cloudflare-page");
   expect(fetcher.mock.calls[1][0]).toBe(

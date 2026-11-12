@@ -35,11 +35,11 @@ GitHub仓库仍用于源码、预设PR与版本管理，现有Pages不会被关�
 
 ## GitHub Pages 的 UID 查询
 
-UID导入提供三个直连和三个Cloudflare转发：Enka官方、MicroGG API、MicroGG网页JSON。默认使用 `https://enka-api.wyh827.workers.dev/api/enka/{uid}?source=microgg`，转发至 `http://profile.microgg.cn/api/uid/{uid}`；MicroGG API直连仍用HTTPS。`source=enka`（或省略source）使用Enka官方，`source=page` 使用 `http://enka.microgg.cn/u/{uid}/__data.json`。
+UID导入提供三个直连和三个Cloudflare转发：Enka官方、MicroGG API、MicroGG网页JSON。默认使用 `https://enka-api.wyh827.workers.dev/api/enka/{uid}?source=page`，转发至 `http://enka.microgg.cn/u/{uid}/__data.json`。`source=microgg` 转发至 `http://profile.microgg.cn/api/uid/{uid}`；MicroGG API直连仍用HTTPS。`source=enka`（或省略source）使用Enka官方，`source=page` 使用 `http://enka.microgg.cn/u/{uid}/__data.json`。
 
 只接受三个固定数据源及合法UID，不接受任意URL代理。转发缓存、并发合并与429退避按来源和UID区分；改变接口取消旧请求并清空预览，不自动更换数据来源。
 
-2026-11-12测试MicroGG网页JSON：HTTP端点返回角色数据，但HTTPS Pages网页禁止混合内容；其HTTPS证书已过期。直连选项保留并明确提示，默认采用Cloudflare转发MicroGG API。其它直连可能受CORS限制。网页与计算继续使用GitHub Pages，Cloudflare只部署转发接口。
+2026-11-12测试MicroGG网页JSON：HTTP端点返回角色数据，但HTTPS Pages网页禁止混合内容；其HTTPS证书已过期。直连选项保留并明确提示，默认采用Cloudflare转发MicroGG网页JSON。其它直连可能受CORS限制。网页与计算继续使用GitHub Pages，Cloudflare只部署转发接口。
 
 若要改用自有服务，可部署 `deploy/enka-worker.ts`：
 

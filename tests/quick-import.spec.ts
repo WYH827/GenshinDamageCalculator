@@ -270,7 +270,7 @@ test("source effect editors start folded, including newly added effects", async 
   await expect(page.locator(".effect-form")).toBeHidden();
 });
 
-test("MicroGG proxy is the default and switching providers clears the preview and cancels old requests", async ({
+test("MicroGG page proxy is the default and switching providers clears the preview and cancels old requests", async ({
   page,
 }) => {
   const response = {
@@ -292,11 +292,30 @@ test("MicroGG proxy is the default and switching providers clears the preview an
   await page.getByRole("button", { name: "快速导入", exact: true }).click();
   await page.getByRole("tab", { name: "Enka UID" }).click();
   await expect(page.getByLabel("UID查询接口", { exact: true })).toHaveValue(
-    "cloudflare-microgg",
+    "cloudflare-page",
   );
   await expect(
     page.getByLabel("UID查询接口", { exact: true }).locator("option"),
   ).toHaveCount(6);
+  const providers = page.getByLabel("UID查询接口", { exact: true });
+  const rows = await providers.locator("option").evaluateAll((options) =>
+    options.map((option) => ({
+      value: (option as HTMLOptionElement).value,
+      struck: option.textContent!.includes("\u0336"),
+      disabled: (option as HTMLOptionElement).disabled,
+    })),
+  );
+  expect(rows.filter((row) => row.struck).map((row) => row.value)).toEqual([
+    "cloudflare-microgg",
+    "microgg",
+    "enka",
+    "page",
+  ]);
+  expect(rows.every((row) => !row.disabled)).toBe(true);
+  for (const row of rows) {
+    await providers.selectOption(row.value);
+    await expect(providers).toHaveValue(row.value);
+  }
   await page.getByLabel("UID查询接口", { exact: true }).selectOption("microgg");
   await page.getByLabel("原神UID", { exact: true }).fill("618285856");
   await page.getByRole("button", { name: "读取账号", exact: true }).click();

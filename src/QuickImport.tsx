@@ -4,6 +4,8 @@ import {
   DEFAULT_ENKA_PROVIDER,
   isProxiedProvider,
   providerSource,
+  enkaProviderLabel,
+  isDiscouragedProvider,
   type EnkaProvider,
 } from "./site-config";
 import { ENKA_SOURCES } from "../shared/enka-sources";
@@ -238,6 +240,9 @@ export default function QuickImport({
           <Field label="UID查询接口">
             <select
               aria-label="UID查询接口"
+              className={
+                isDiscouragedProvider(provider) ? "provider-struck" : ""
+              }
               value={provider}
               onChange={(event) => {
                 cancelLoad();
@@ -248,12 +253,13 @@ export default function QuickImport({
               }}
             >
               {Object.entries(ENKA_PROVIDERS).map(([key, label]) => (
-                <option key={key} value={key}>
-                  {label}
+                <option key={key} value={key} aria-label={label}>
+                  {enkaProviderLabel(key as EnkaProvider)}
                 </option>
               ))}
             </select>
           </Field>
+          <p className="input-note">划线选项目前读取受限，仍可选择尝试。</p>
           <Field label="原神UID">
             <input
               inputMode="numeric"

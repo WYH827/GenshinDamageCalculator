@@ -23,10 +23,10 @@ describe("damage reference scale", () => {
   });
 });
 describe("static host and Enka deployment", () => {
-  it("offers three direct sources and three proxy routes, defaulting to MicroGG proxy", () => {
+  it("offers three direct sources and three proxy routes, defaulting to MicroGG page proxy", () => {
     vi.stubEnv("VITE_STATIC_HOST", "");
     vi.stubEnv("VITE_ENKA_API_BASE", "");
-    expect(enkaApiUrl("123456789")).toBe("/api/enka/123456789?source=microgg");
+    expect(enkaApiUrl("123456789")).toBe("/api/enka/123456789?source=page");
     expect(enkaApiUrl("123456789", "cloudflare")).toBe("/api/enka/123456789");
     expect(enkaApiUrl("123456789", "microgg")).toBe(
       "https://profile.microgg.cn/api/uid/123456789",
@@ -43,7 +43,7 @@ describe("static host and Enka deployment", () => {
     );
     vi.stubEnv("VITE_ENKA_API_BASE", "https://example.workers.dev/");
     expect(enkaApiUrl("123456789")).toBe(
-      "https://example.workers.dev/api/enka/123456789?source=microgg",
+      "https://example.workers.dev/api/enka/123456789?source=page",
     );
     expect(enkaApiUrl("123456789", "cloudflare")).toBe(
       "https://example.workers.dev/api/enka/123456789",

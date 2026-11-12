@@ -36,6 +36,7 @@ test("Enka four character import carries base stats, avatars, weapons and activa
   await page.goto("/");
   await page.getByRole("button", { name: "快速导入", exact: true }).click();
   await page.getByRole("tab", { name: "Enka UID", exact: true }).click();
+  await page.getByLabel("UID查询接口", { exact: true }).selectOption("cloudflare");
   await page.getByLabel("原神UID", { exact: true }).fill("618285856");
   await page.getByRole("button", { name: "读取账号", exact: true }).click();
   const d = page.getByRole("dialog");

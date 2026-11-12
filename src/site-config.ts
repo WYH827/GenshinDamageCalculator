@@ -13,16 +13,20 @@ export const SITE = {
       : "https://wyh827.github.io/GenshinDamageCalculator/"),
   published: import.meta.env.VITE_SITE_PUBLISHED === "true",
 };
-export function enkaApiUrl(uid: string) {
+export const ENKA_PROVIDERS = {
+  microgg: "MicroGG（默认）",
+  cloudflare: "Cloudflare（Enka官方）",
+} as const;
+export type EnkaProvider = keyof typeof ENKA_PROVIDERS;
+export function enkaApiUrl(uid: string, provider: EnkaProvider = "microgg") {
+  if (provider === "microgg")
+    return `https://profile.microgg.cn/api/uid/${uid}`;
   const endpoint = import.meta.env.VITE_ENKA_API_BASE?.trim().replace(
     /\/$/,
     "",
   );
   if (endpoint) return `${endpoint}/api/enka/${uid}`;
   if (import.meta.env.VITE_STATIC_HOST === "true")
-    return `https://r.jina.ai/https://enka.network/api/uid/${uid}/`;
+    return `https://enka-api.wyh827.workers.dev/api/enka/${uid}`;
   return `/api/enka/${uid}`;
 }
-export const usesPublicEnkaRelay = () =>
-  import.meta.env.VITE_STATIC_HOST === "true" &&
-  !import.meta.env.VITE_ENKA_API_BASE?.trim();

@@ -1,5 +1,5 @@
 import CharacterVisual from "./CharacterVisual";
-import { usesPublicEnkaRelay } from "./site-config";
+import { ENKA_PROVIDERS, type EnkaProvider } from "./site-config";
 import {
   fetchEnka,
   officialEnkaUrl,
@@ -52,6 +52,7 @@ export default function QuickImport({
     }),
     [sourceKey, setSourceKey] = useState("");
   const [batch, setBatch] = useState(false);
+  const [provider, setProvider] = useState<EnkaProvider>("microgg");
   const [officialOpen, setOfficialOpen] = useState(false),
     [officialText, setOfficialText] = useState("");
   const validUid = /^[1-9]\d{8,9}$/.test(uidValue.trim());
@@ -114,7 +115,11 @@ export default function QuickImport({
     setError("");
     setAccount(null);
     try {
-      const json = await fetchEnka(uidValue.trim(), controller.signal);
+      const json = await fetchEnka(
+        uidValue.trim(),
+        controller.signal,
+        provider,
+      );
       if (id === sequence.current) select(parseEnkaImport(json));
     } catch (e) {
       if (id === sequence.current && !controller.signal.aborted) {
@@ -223,6 +228,25 @@ export default function QuickImport({
         </div>
       ) : (
         <div className="quick-import-source">
+          <Field label="UID查询接口">
+            <select
+              aria-label="UID查询接口"
+              value={provider}
+              onChange={(event) => {
+                cancelLoad();
+                setProvider(event.target.value as EnkaProvider);
+                setAccount(null);
+                setError("");
+                setOfficialOpen(false);
+              }}
+            >
+              {Object.entries(ENKA_PROVIDERS).map(([key, label]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </Field>
           <Field label="原神UID">
             <input
               inputMode="numeric"
@@ -247,21 +271,35 @@ export default function QuickImport({
             >
               Enka.Network
             </a>{" "}
-            仅返回公开展柜角色，请在游戏中开启“显示角色详情”。数据受接口缓存影响。在线版通过Cloudflare转发Enka请求，无需登录。
+            仅返回公开展柜角色，请在游戏中开启“显示角色详情”。数据受接口缓存影响。
           </p>
-          {usesPublicEnkaRelay() && (
-            <p className="input-note">
-              在线版通过{" "}
-              <a
-                href="https://jina.ai/reader/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Jina Reader
-              </a>{" "}
-              尝试自动读取Enka公开JSON，UID将发送给该服务。匿名请求可能受限制；失败时可使用下方官方直读方式。
-            </p>
-          )}
+          <p className="input-note">
+            {provider === "microgg" ? (
+              <>
+                默认直连{" "}
+                <a
+                  href="https://profile.microgg.cn/api/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  MicroGG
+                </a>
+                ，UID发送至该服务。读取失败时可切换Cloudflare。
+              </>
+            ) : (
+              <>
+                通过作者的{" "}
+                <a
+                  href="https://enka-api.wyh827.workers.dev/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Cloudflare接口
+                </a>{" "}
+                转发Enka官方请求，UID发送至该接口与Enka，无需登录。
+              </>
+            )}
+          </p>
           <details className="official-enka-fallback" open={officialOpen}>
             <summary
               onClick={(event) => {

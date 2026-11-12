@@ -1,6 +1,6 @@
-import { enkaApiUrl, usesPublicEnkaRelay } from "./site-config";
+import { enkaApiUrl, type EnkaProvider } from "./site-config";
 const cache = new Map<string, { expires: number; data: unknown }>();
-let relayRetryAt = 0;
+const retryAt = new Map<string, number>();
 export const officialEnkaUrl = (uid: string) => {
   if (!/^[1-9]\d{8,9}$/.test(uid)) throw new Error("请输入9或10位数字UID");
   return `https://enka.network/api/uid/${uid}/`;
@@ -25,64 +25,27 @@ export function parseOfficialEnkaText(text: string, uid: string): unknown {
   return data;
 }
 
-// Reader wraps the unmodified API text in data.content. Only accept JSON from
-// the exact requested Enka UID endpoint; never interpret prose or rendered HTML.
-function unwrapReader(data: unknown, uid: string): unknown {
-  const response = data as {
-    code?: number;
-    data?: { url?: string; content?: string };
-  } | null;
-  if (
-    response?.code !== 200 ||
-    response.data?.url !== `https://enka.network/api/uid/${uid}/` ||
-    typeof response.data.content !== "string"
-  )
-    throw new Error("查询服务未返回有效的Enka JSON，请稍后重试");
-  try {
-    return JSON.parse(response.data.content);
-  } catch {
-    throw new Error("Enka数据不完整或不是JSON，请稍后重试");
-  }
-}
-const rateLimitMessage = (seconds: number) =>
-  `查询过于频繁，请${seconds}秒后重试`;
-
 export async function fetchEnka(
   uid: string,
   signal: AbortSignal,
+  provider: EnkaProvider = "microgg",
 ): Promise<unknown> {
   signal.throwIfAborted();
-  if (!/^[1-9]\d{8,9}$/.test(uid)) throw new Error("请输入9或10位数字UID");
-  const url = enkaApiUrl(uid),
-    relay = usesPublicEnkaRelay();
-  const saved = relay ? cache.get(uid) : undefined;
+  officialEnkaUrl(uid);
+  const url = enkaApiUrl(uid, provider);
+  const saved = provider === "microgg" ? cache.get(url) : undefined;
   if (saved && saved.expires > Date.now()) return saved.data;
-  if (relay && relayRetryAt > Date.now())
-    throw new Error(
-      rateLimitMessage(Math.ceil((relayRetryAt - Date.now()) / 1000)),
-    );
-  let last = "读取失败";
+  const wait = (retryAt.get(url) ?? 0) - Date.now();
+  if (wait > 0)
+    throw new Error(`查询过于频繁，请${Math.ceil(wait / 1000)}秒后重试`);
   try {
     const r = await fetch(url, {
-      ...(relay
-        ? {
-            headers: {
-              Accept: "application/json",
-              "X-Engine": "curl",
-              "X-Cache-Tolerance": "60",
-            },
-          }
-        : {}),
       signal: AbortSignal.any([signal, AbortSignal.timeout(30000)]),
     });
     const text = await r.text();
     if (text.length > 16 * 1024 * 1024) throw new Error("响应过大");
     if (!r.ok) {
-      if (relay && (r.status === 401 || r.status === 403))
-        throw new Error(
-          "公共服务限制了匿名查询，请使用下方“从Enka官方读取并粘贴JSON”。无需账号或下载文件",
-        );
-      if (relay && r.status === 429) {
+      if (r.status === 429) {
         const retry = r.headers.get("Retry-After");
         const seconds =
           retry && /^\d+$/.test(retry)
@@ -91,56 +54,41 @@ export async function fetchEnka(
               ? Math.ceil((Date.parse(retry) - Date.now()) / 1000)
               : 60;
         const delay = Number.isFinite(seconds) ? Math.max(1, seconds) : 60;
-        relayRetryAt = Date.now() + delay * 1000;
-        throw new Error(rateLimitMessage(delay));
+        retryAt.set(url, Date.now() + delay * 1000);
+        throw new Error(`查询过于频繁，请${delay}秒后重试`);
       }
       let detail = "";
-      if (!relay) {
-        try {
-          const error = JSON.parse(text)?.error;
-          if (typeof error === "string") detail = error;
-        } catch {
-          /* The upstream may return an HTML error page. */
-        }
+      try {
+        const data = JSON.parse(text);
+        if (typeof data?.error === "string") detail = data.error;
+      } catch {
+        /* Some services return an HTML error page. */
       }
-      throw new Error(
-        detail ||
-          (r.status === 429
-            ? "请求过快，请稍后再试"
-            : `查询服务暂不可用（${r.status}）`),
-      );
+      throw new Error(detail || `查询服务暂不可用（${r.status}）`);
     }
-    let data = JSON.parse(text);
-    if (relay) data = unwrapReader(data, uid);
-    if (data?.error)
-      throw new Error(
-        typeof data.error === "string" ? data.error : "Enka返回错误",
-      );
-    if (
-      !data ||
-      typeof data !== "object" ||
-      (!data.playerInfo && !Array.isArray(data.avatarInfoList))
-    )
-      throw new Error("未读取到Enka账号数据");
-    if (data.uid != null && String(data.uid) !== uid)
-      throw new Error("返回的UID与查询不一致，请稍后重试");
+    const data = parseOfficialEnkaText(text, uid);
+    const ttlValue = (data as { ttl?: number }).ttl;
     const ttl =
-      typeof data.ttl === "number" && Number.isFinite(data.ttl)
-        ? Math.max(1, Math.min(data.ttl, 3600))
+      typeof ttlValue === "number" && Number.isFinite(ttlValue)
+        ? Math.max(1, Math.min(ttlValue, 3600))
         : 60;
-    if (cache.size >= 100) cache.delete(cache.keys().next().value!);
-    if (relay) cache.set(uid, { data, expires: Date.now() + ttl * 1000 });
+    if (provider === "microgg") {
+      if (cache.size >= 100) cache.delete(cache.keys().next().value!);
+      cache.set(url, { data, expires: Date.now() + ttl * 1000 });
+    }
     return data;
   } catch (e) {
     if (signal.aborted) throw e;
-    last =
+    const name = provider === "microgg" ? "MicroGG" : "Cloudflare";
+    const message =
       (e as Error).name === "TimeoutError"
-        ? "查询超时，请稍后重试"
-        : (e as Error).message;
+        ? "查询超时"
+        : (e as Error).message === "Failed to fetch" ||
+            (e as Error).name === "TypeError"
+          ? "网络或跨域读取失败"
+          : (e as Error).message;
+    throw new Error(
+      `${name}：${message}。${provider === "microgg" ? "可切换Cloudflare后重新读取" : "可切换MicroGG或使用下方官方JSON导入"}`,
+    );
   }
-  throw new Error(
-    relay
-      ? `公共Enka查询服务暂不可用，请稍后重试或使用JSON导入。${last}`
-      : last,
-  );
 }

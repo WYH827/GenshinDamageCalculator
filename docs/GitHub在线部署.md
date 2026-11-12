@@ -35,13 +35,11 @@ GitHub仓库仍用于源码、预设PR与版本管理，现有Pages不会被关�
 
 ## GitHub Pages 的 UID 查询
 
-本站现已配置作者的Cloudflare转发：`https://enka-api.wyh827.workers.dev`，通过仓库变量 `VITE_ENKA_API_BASE` 使用；Pages域名不变。接口允许 `https://wyh827.github.io` 跨域读取。部分网络无法直接连接workers.dev，需要可达该域名的网络或后续绑定自有域名。下方匿名公共服务仅为未配置自有接口时的后备路径。
+UID导入默认直连 `https://profile.microgg.cn/api/uid/{uid}`，可在「UID查询接口」选择Cloudflare：`https://enka-api.wyh827.workers.dev`。Cloudflare地址通过仓库变量 `VITE_ENKA_API_BASE` 设置，仅影响Cloudflare选项；网页地址不变。切换接口后取消旧请求并清空预览，必须重新读取，不自动切换数据来源。
 
-2026-11-12复核：Jina可能返回401（匿名IP信誉限制），不能保证免账号自动查询的可用性。工作台在失败后展开“从Enka官方读取并粘贴JSON”：打开当前UID的官方接口、复制完整JSON并粘贴预览，保持原有单角色/四角色选择，不下载文件。浏览器已实测官方API缺少 `Access-Control-Allow-Origin`，所以Pages脚本无法直接读取；`no-cors`不能解决。
+2026-11-12从本站Pages来源实测：MicroGG返回JSON，但当前响应没有 `Access-Control-Allow-Origin`，本机浏览器报CORS读取失败。保留用户要求的MicroGG直连默认选项；遇到此问题手动切换Cloudflare，其接口已实测可读取。两者使用各自的数据与缓存，UID发送至所选服务。Enka官方API也缺少跨域许可，不能用 `no-cors` 读取JSON。
 
-未配置自有接口时，GitHub Pages尝试向 `https://r.jina.ai/https://enka.network/api/uid/{uid}/` 请求JSON，无需API Key或迁移网站。请求使用 `Accept: application/json`、`X-Engine: curl`、`X-Cache-Tolerance: 60`，仅从返回的 `data.content` 解析原始JSON，不做文本提取或数值推断。校验来源URL和返回UID，拒绝HTML、截断文本及错误响应。客户端尊重Enka TTL与限流的Retry-After。
-
-已核对 starrailoptimizer.github.io 的部署JS：其前端调用AWS `/prod/profile/{uid}` 接口，因此Pages页面可以通过支持CORS的外部服务完成UID查询；本项目使用支持原神数据的Jina Reader公开接口。参考 [Reader官方说明](https://github.com/jina-ai/reader#json-mode)。
+自动读取失败时可展开“从Enka官方读取并粘贴JSON”：打开当前UID的官方接口、复制完整JSON并粘贴预览，保持单角色/四角色选择，无需下载文件。
 
 若要改用自有服务，可部署 `deploy/enka-worker.ts`：
 
@@ -58,7 +56,7 @@ GitHub仓库仍用于源码、预设PR与版本管理，现有Pages不会被关�
 
 - `npm ci`，`npm run dev`：本地编辑和自带UID接口。
 - `npm run build`，`npm run preview`：验证生产构建，同样提供本地UID接口。
-- 静态构建设置 `VITE_STATIC_HOST=true`；没有 `VITE_ENKA_API_BASE` 时通过Jina Reader公共服务查询UID，配置后使用自有接口。
+- 静态构建设置 `VITE_STATIC_HOST=true`；默认MicroGG直连；Cloudflare选项使用 `VITE_ENKA_API_BASE`，未设置时使用作者的Cloudflare地址。
 - 作者页地址通过 `VITE_SITE_URL` / `VITE_REPOSITORY_URL` 配置。Pages workflow 自动使用当前仓库生成地址，并标为已发布；本地未设置时显示预设地址与未发布状态。
 - 浏览器数据按域名隔离，从本地迁移到网站请先导出方案再导入。
 

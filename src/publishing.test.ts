@@ -23,17 +23,23 @@ describe("damage reference scale", () => {
   });
 });
 describe("static host and Enka deployment", () => {
-  it("uses the local API by default and an explicit service on static hosts", () => {
+  it("defaults to MicroGG, offers local/static Cloudflare and honors its configured origin", () => {
     vi.stubEnv("VITE_STATIC_HOST", "");
     vi.stubEnv("VITE_ENKA_API_BASE", "");
-    expect(enkaApiUrl("123456789")).toBe("/api/enka/123456789");
-    vi.stubEnv("VITE_STATIC_HOST", "true");
     expect(enkaApiUrl("123456789")).toBe(
-      "https://r.jina.ai/https://enka.network/api/uid/123456789/",
+      "https://profile.microgg.cn/api/uid/123456789",
+    );
+    expect(enkaApiUrl("123456789", "cloudflare")).toBe("/api/enka/123456789");
+    vi.stubEnv("VITE_STATIC_HOST", "true");
+    expect(enkaApiUrl("123456789", "cloudflare")).toBe(
+      "https://enka-api.wyh827.workers.dev/api/enka/123456789",
     );
     vi.stubEnv("VITE_ENKA_API_BASE", "https://example.workers.dev/");
-    expect(enkaApiUrl("123456789")).toBe(
+    expect(enkaApiUrl("123456789", "cloudflare")).toBe(
       "https://example.workers.dev/api/enka/123456789",
+    );
+    expect(enkaApiUrl("123456789")).toBe(
+      "https://profile.microgg.cn/api/uid/123456789",
     );
   });
   it("restricts origin, validates UID, handles CORS and uses the shared cached query", async () => {

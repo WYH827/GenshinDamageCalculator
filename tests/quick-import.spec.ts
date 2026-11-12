@@ -177,6 +177,9 @@ test("Enka UID response, hidden showcase and HTTP failures, invalid JSON and can
   await loadFile(page, { invalid: true });
   await expect(page.getByRole("alert")).toContainText("GOOD");
   await page.getByRole("tab", { name: "Enka UID" }).click();
+  await page
+    .getByLabel("UID查询接口", { exact: true })
+    .selectOption("cloudflare");
   await page.getByLabel("原神UID", { exact: true }).fill("abc");
   await page.getByRole("button", { name: "读取账号", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("9或10位");
@@ -201,6 +204,9 @@ test("Enka UID response, hidden showcase and HTTP failures, invalid JSON and can
   await expect.poll(async () => (await saved(page)).weapons[0].atk).toBe(674);
   await page.getByRole("button", { name: "快速导入", exact: true }).click();
   await page.getByRole("tab", { name: "Enka UID" }).click();
+  await page
+    .getByLabel("UID查询接口", { exact: true })
+    .selectOption("cloudflare");
   await page.getByLabel("原神UID", { exact: true }).fill("618285856");
   await page.route("**/api/enka/**", (route) =>
     route.fulfill({ json: { playerInfo: { nickname: "hidden" } } }),
@@ -211,7 +217,7 @@ test("Enka UID response, hidden showcase and HTTP failures, invalid JSON and can
     route.fulfill({ status: 429, json: { error: "Enka请求过快，请稍后重试" } }),
   );
   await page.getByRole("button", { name: "读取账号", exact: true }).click();
-  await expect(page.getByRole("alert")).toContainText("请求过快");
+  await expect(page.getByRole("alert")).toContainText("查询过于频繁");
   await expect(
     page.getByRole("button", { name: "确认导入", exact: true }),
   ).toBeDisabled();
@@ -223,6 +229,7 @@ test("Enka UID response, hidden showcase and HTTP failures, invalid JSON and can
     await gate;
     await route.fulfill({ json: response }).catch(() => {});
   });
+  await page.getByLabel("原神UID", { exact: true }).fill("618285857");
   const requested = page.waitForRequest("**/api/enka/**");
   await page.getByRole("button", { name: "读取账号", exact: true }).click();
   await requested;
@@ -256,7 +263,64 @@ test("source effect editors start folded, including newly added effects", async 
   await page.getByRole("button", { name: "添加效果", exact: true }).click();
   await expect(page.locator(".effect-form")).toBeHidden();
   await nav(page, "天赋/命座");
-  await page.getByRole("button", { name: "添加天赋/命座", exact: true }).click();
+  await page
+    .getByRole("button", { name: "添加天赋/命座", exact: true })
+    .click();
   await page.getByRole("button", { name: "添加效果", exact: true }).click();
   await expect(page.locator(".effect-form")).toBeHidden();
+});
+
+test("MicroGG is the default and switching providers clears the preview and cancels old requests", async ({
+  page,
+}) => {
+  const response = {
+    uid: "618285856",
+    playerInfo: { nickname: "MicroGG" },
+    avatarInfoList: [
+      { avatarId: 10000021, propMap: { "4001": { val: "90" } }, equipList: [] },
+    ],
+  };
+  await page.route("https://profile.microgg.cn/api/uid/*", (route) =>
+    route.fulfill({ json: response }),
+  );
+  await page.route("**/api/enka/**", (route) =>
+    route.fulfill({
+      json: { ...response, playerInfo: { nickname: "Cloudflare" } },
+    }),
+  );
+  await page.goto("/");
+  await page.getByRole("button", { name: "快速导入", exact: true }).click();
+  await page.getByRole("tab", { name: "Enka UID" }).click();
+  await expect(page.getByLabel("UID查询接口", { exact: true })).toHaveValue(
+    "microgg",
+  );
+  await page.getByLabel("原神UID", { exact: true }).fill("618285856");
+  await page.getByRole("button", { name: "读取账号", exact: true }).click();
+  await expect(page.getByRole("dialog")).toContainText("MicroGG · 1个角色");
+  await page
+    .getByLabel("UID查询接口", { exact: true })
+    .selectOption("cloudflare");
+  await expect(page.getByLabel("来源角色", { exact: true })).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "确认导入", exact: true }),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: "读取账号", exact: true }).click();
+  await expect(page.getByRole("dialog")).toContainText("Cloudflare · 1个角色");
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => (release = resolve));
+  await page.route("**/api/enka/**", async (route) => {
+    await gate;
+    await route.fulfill({ json: response }).catch(() => {});
+  });
+  const requested = page.waitForRequest("**/api/enka/**");
+  await page.getByRole("button", { name: "读取账号", exact: true }).click();
+  await requested;
+  await page.getByLabel("UID查询接口", { exact: true }).selectOption("microgg");
+  release();
+  await expect(page.getByLabel("来源角色", { exact: true })).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "确认导入", exact: true }),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: "取消", exact: true }).click();
+  await expect(page.getByLabel("角色名称", { exact: true })).toHaveValue("");
 });

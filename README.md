@@ -71,7 +71,7 @@ GitHub Actions在主分支更新后自动校验预设、测试、构建和发布
 
 **默认使用Cloudflare转发MicroGG API。** 网页仍在GitHub Pages。MicroGG网页JSON的HTTP直连被HTTPS页面作为混合内容拦截，其HTTPS版本本次检查证书已过期，因此需要转发。另两种直连可能受跨域或网络限制。三个转发选项都读取对应数据源，不自动切换来源；缓存、限流按来源分别处理。切换选项清空旧预览并取消旧请求，需重新点击「读取账号」。UID发送至所选数据源，转发时还会经过作者接口。三种数据均沿用单角色/四角色预览导入，失败时可使用官方JSON粘贴导入。
 
-Cloudflare转发MicroGG API的上游已改为 `http://profile.microgg.cn/api/uid/{uid}`，直连选项仍使用HTTPS。改用HTTP后525握手错误消失，但本次实测上游返回409；MicroGG网页JSON与Enka官方的转发均能读取，遇到409时可手动切换。
+Cloudflare转发MicroGG API的上游已改为 `http://profile.microgg.cn/api/uid/{uid}`，直连选项仍使用HTTPS。改用HTTP后525握手错误消失，但上游返回409；显式使用常见浏览器User-Agent后仍返回409。MicroGG网页JSON与Enka官方的转发均能读取，遇到409时可手动切换。
 
 当前仓库变量 `VITE_ENKA_API_BASE` 为 `https://enka-api.wyh827.workers.dev`。自行部署时可使用 `deploy/enka-worker.ts` 并配置自己的接口地址；本地dev/preview继续使用内置转发接口。
 

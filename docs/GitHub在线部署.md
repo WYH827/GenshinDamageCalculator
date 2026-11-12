@@ -66,4 +66,4 @@ UID导入提供三个直连和三个Cloudflare转发：Enka官方、MicroGG API�
 
 发布内容不包括 `node_modules`、`verification`、临时截图、测试报告或用户下载目录中的方案。作者头像和第三方素材说明见 `THIRD_PARTY_NOTICES.md`，代码许可见 `LICENSE`。
 
-2026-11-12六来源部署实测：Cloudflare转发MicroGG网页JSON返回12个角色，Enka官方示例返回4个角色；MicroGG API的HTTPS转发返回525，按用户要求改为HTTP后返回409，未自动更换来源，仍可手动切换至另外两个转发选项。
+2026-11-12六来源部署实测：Cloudflare转发MicroGG网页JSON返回12个角色，Enka官方示例返回4个角色；MicroGG API的HTTPS转发返回525，按用户要求改为HTTP后返回409，再改用常见浏览器User-Agent仍返回409，未自动更换来源，仍可手动切换至另外两个转发选项。

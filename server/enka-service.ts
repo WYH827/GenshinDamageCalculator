@@ -25,7 +25,9 @@ export async function queryEnka(uid: string, source: EnkaSource = "enka") {
       const r = await fetch(url, {
         headers: {
           "User-Agent":
-            "TeyvatDamageStudio/0.1 (+https://github.com/WYH827/GenshinDamageCalculator)",
+            source === "microgg"
+              ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+              : "TeyvatDamageStudio/0.1 (+https://github.com/WYH827/GenshinDamageCalculator)",
           Accept: "application/json",
         },
         signal: AbortSignal.timeout(20000),

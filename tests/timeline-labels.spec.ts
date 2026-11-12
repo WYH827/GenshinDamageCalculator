@@ -70,10 +70,10 @@ test("valid unnamed effects stay editable and contribute damage, missing referen
   await expect(page.locator(".timeline-panel")).not.toContainText("效果已删除");
   const row = page
     .locator(".timeline-row")
-    .filter({ hasText: "触发效果：奥黛塔天赋华彩（队友）" });
+    .filter({ hasText: "触发效果：奥黛塔天赋/命座华彩（队友）" });
   await expect(row).toContainText("华彩（队友）");
   await row
-    .getByRole("button", { name: "编辑事件 触发效果：奥黛塔天赋华彩（队友）" })
+    .getByRole("button", { name: "编辑事件 触发效果：奥黛塔天赋/命座华彩（队友）" })
     .click();
   await expect(
     page

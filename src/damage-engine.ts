@@ -3,6 +3,7 @@ import {
   effectTargetIds,
   isEnemyEffect,
   isDamageEffect,
+  isConditionalCritEffect,
   effectTargetValid,
   starSuperconduct,
   sortedTimeline,
@@ -134,7 +135,7 @@ function relevant(
       : "不匹配本次伤害元素";
   if (e.type === "降低防御")
     return skill.damage.special ? "星月直伤不使用防御区" : null;
-  if (!isDamageEffect(e.type)) return null;
+  if (!isDamageEffect(e.type) && !isConditionalCritEffect(e)) return null;
   if (!damageMatches(e.damage, skill.damage))
     return "不匹配伤害属性、动作、依赖属性或高级属性";
   if (e.type === "增幅反应增伤") {
@@ -199,6 +200,8 @@ export function evaluateDamage(
       extra = 0,
       upliftPercent = 0;
     let amplificationBonus = 0;
+    let critRateBonus = 0,
+      critDamageBonus = 0;
     const independentFactors: number[] = [];
     for (const row of resolver.active) {
       const e = row.effect,
@@ -231,6 +234,7 @@ export function evaluateDamage(
       }
       if (
         !isDamageEffect(e.type) &&
+        !isConditionalCritEffect(e) &&
         !["敌方抗性", "降低防御"].includes(e.type)
       ) {
         use.status = "panel";
@@ -276,6 +280,12 @@ export function evaluateDamage(
       use.status = "applied";
       use.reason = "参与本次伤害";
       switch (e.type) {
+        case "暴击率":
+          critRateBonus += value;
+          break;
+        case "暴击伤害":
+          critDamageBonus += value;
+          break;
         case "敌方抗性":
           resistance += value;
           break;
@@ -332,9 +342,9 @@ export function evaluateDamage(
     const effectiveMultiplier =
       nonnegative((skill.multiplier + addM) / 100, "技能有效倍率") *
       nonnegative(1 + boostM / 100, "倍率提升系数");
-    const critRate = resolver.resolve(c.id, "暴击率", "live"),
+    const critRate = resolver.resolve(c.id, "暴击率", "live") + critRateBonus,
       critDamage = nonnegative(
-        resolver.resolve(c.id, "暴击伤害", "live"),
+        resolver.resolve(c.id, "暴击伤害", "live") + critDamageBonus,
         "暴击伤害",
       );
     const probability = Math.max(0, Math.min(1, critRate / 100));

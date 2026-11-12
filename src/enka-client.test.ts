@@ -121,3 +121,23 @@ it("invalid UID and cancellation never issue a request", async () => {
   );
   expect(fetcher).not.toHaveBeenCalled();
 });
+
+it("explains anonymous denial and validates directly pasted official JSON", async () => {
+  const { parseOfficialEnkaText, officialEnkaUrl } =
+    await import("./enka-client");
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async () => new Response("denied", { status: 401 })),
+  );
+  await expect(fetchEnka(uid, new AbortController().signal)).rejects.toThrow(
+    "官方读取并粘贴JSON",
+  );
+  expect(officialEnkaUrl(uid)).toBe(`https://enka.network/api/uid/${uid}/`);
+  expect(parseOfficialEnkaText(JSON.stringify(data), uid)).toEqual(data);
+  expect(() => parseOfficialEnkaText("<html>error</html>", uid)).toThrow(
+    "完整JSON",
+  );
+  expect(() =>
+    parseOfficialEnkaText(JSON.stringify(data), "123456778"),
+  ).toThrow("UID不一致");
+});

@@ -1,5 +1,19 @@
 import { uid, type TimelineEvent } from "./model";
 import { scheduledCount } from "./schedule";
+export function copyTimelineEvent(e: TimelineEvent): TimelineEvent {
+  const id = uid();
+  return {
+    ...structuredClone(e),
+    id,
+    ...(e.disabledOccurrences
+      ? {
+          disabledOccurrences: e.disabledOccurrences.map((key) =>
+            key.startsWith(`${e.id}~`) ? `${id}${key.slice(e.id.length)}` : key,
+          ),
+        }
+      : {}),
+  };
+}
 export function batchSkills(
   skillId: string,
   time: number,
@@ -52,8 +66,7 @@ export function transformEvents(
   if (first + offset < 0)
     throw new Error("移动或复制后不能早于0.00s，请调整秒数");
   const change = (e: TimelineEvent) => ({
-    ...structuredClone(e),
-    id: action === "copy" ? uid() : e.id,
+    ...(action === "copy" ? copyTimelineEvent(e) : structuredClone(e)),
     time: Number((e.time + offset).toPrecision(15)),
   });
   return action === "copy"

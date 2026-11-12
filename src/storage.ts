@@ -225,6 +225,7 @@ const mainStatsSchema = z.object({
 });
 const effectSchema = z
   .object({
+    enabled: z.boolean().optional(),
     id,
     name: text,
     nameMode: z.enum(["auto", "custom"]).optional(),
@@ -496,6 +497,15 @@ const projectSchema = z
         z.discriminatedUnion("kind", [
           z.object({
             id,
+            enabled: z.boolean().optional(),
+            disabledEffectKeys: z
+              .array(z.string().max(500))
+              .max(2000)
+              .optional(),
+            disabledOccurrences: z
+              .array(z.string().max(500))
+              .max(10000)
+              .optional(),
             time: positive,
             kind: z.literal("effectTrigger"),
             effectKey: z.string().min(1).max(500),
@@ -504,6 +514,15 @@ const projectSchema = z
           }),
           z.object({
             id,
+            enabled: z.boolean().optional(),
+            disabledEffectKeys: z
+              .array(z.string().max(500))
+              .max(2000)
+              .optional(),
+            disabledOccurrences: z
+              .array(z.string().max(500))
+              .max(10000)
+              .optional(),
             time: positive,
             kind: z.literal("trigger"),
             sourceKind: z.enum(["weapon", "artifact", "talent"]),
@@ -512,6 +531,15 @@ const projectSchema = z
           }),
           z.object({
             id,
+            enabled: z.boolean().optional(),
+            disabledEffectKeys: z
+              .array(z.string().max(500))
+              .max(2000)
+              .optional(),
+            disabledOccurrences: z
+              .array(z.string().max(500))
+              .max(10000)
+              .optional(),
             time: positive,
             kind: z.literal("skill"),
             skillId: id,
@@ -535,12 +563,30 @@ const projectSchema = z
           }),
           z.object({
             id,
+            enabled: z.boolean().optional(),
+            disabledEffectKeys: z
+              .array(z.string().max(500))
+              .max(2000)
+              .optional(),
+            disabledOccurrences: z
+              .array(z.string().max(500))
+              .max(10000)
+              .optional(),
             time: positive,
             kind: z.literal("switch"),
             characterId: id,
           }),
           z.object({
             id,
+            enabled: z.boolean().optional(),
+            disabledEffectKeys: z
+              .array(z.string().max(500))
+              .max(2000)
+              .optional(),
+            disabledOccurrences: z
+              .array(z.string().max(500))
+              .max(10000)
+              .optional(),
             time: positive,
             kind: z.literal("effect"),
             effect: effectSchema,
@@ -548,6 +594,15 @@ const projectSchema = z
           }),
           z.object({
             id,
+            enabled: z.boolean().optional(),
+            disabledEffectKeys: z
+              .array(z.string().max(500))
+              .max(2000)
+              .optional(),
+            disabledOccurrences: z
+              .array(z.string().max(500))
+              .max(10000)
+              .optional(),
             time: positive,
             kind: z.literal("stacks"),
             effectKey: z.string().min(1).max(500),

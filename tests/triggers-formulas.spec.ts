@@ -60,13 +60,13 @@ test("artifact and talent global/trigger workflows, enemy fields and formula var
     .getByRole("combobox", { name: "数值方式", exact: true })
     .selectOption("base");
   await ed.getByLabel("系数", { exact: false }).fill("0.1");
-  await nav(page, "天赋");
+  await nav(page, "天赋/命座");
   await expect(
-    page.getByRole("heading", { name: "角色天赋", exact: true }),
+    page.getByRole("heading", { name: "角色天赋/命座", exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "添加天赋", exact: true }).click();
+  await page.getByRole("button", { name: "添加天赋/命座", exact: true }).click();
   const talent = page.locator(".talent-panel, .talent-draft");
-  await talent.getByLabel("天赋名称", { exact: true }).fill("测试天赋");
+  await talent.getByLabel("天赋/命座名称", { exact: true }).fill("测试天赋");
   await talent.getByRole("button", { name: "添加效果", exact: true }).click();
   await page
     .locator(".effect-details")
@@ -137,7 +137,7 @@ test("artifact and talent global/trigger workflows, enemy fields and formula var
   ).toContainText("圣遗物");
   await expect(
     page.locator(".global-event").filter({ hasText: "常驻天赋" }),
-  ).toContainText("天赋");
+  ).toContainText("天赋/命座");
   for (const [kind, index] of [
     ["artifact", 0],
     ["talent", 0],
@@ -214,15 +214,15 @@ test("artifact and talent global/trigger workflows, enemy fields and formula var
   await expect(
     page.getByRole("spinbutton", { name: "水元素抗性 %", exact: true }),
   ).toHaveValue("-20");
-  await nav(page, "天赋");
+  await nav(page, "天赋/命座");
   await page
-    .getByRole("button", { name: "编辑天赋 测试天赋", exact: true })
+    .getByRole("button", { name: "编辑天赋/命座 测试天赋", exact: true })
     .click();
   await expect(talent.getByLabel("公式 1", { exact: true })).toHaveValue(
     "(x - 2000) * 0.04",
   );
   await talent
-    .getByRole("button", { name: "删除天赋 测试天赋", exact: true })
+    .getByRole("button", { name: "删除天赋/命座 测试天赋", exact: true })
     .click();
   await page.getByRole("button", { name: "确认", exact: true }).click();
   await nav(page, "时间轴");

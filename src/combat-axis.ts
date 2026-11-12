@@ -24,7 +24,7 @@ export function buildCombatAxis(project: Project): CombatAxisData {
   const end = endTime(project);
   try {
     const p = upgradeRealtimeProject(project),
-      catalog = effectCatalog(p);
+      catalog = effectCatalog(p).filter((e) => e.effect.enabled !== false);
     const state = realtimeTimeline(p, { trace: true });
     const grouped = new Map<string, EffectTransition[]>();
     for (const event of state.transitions) {

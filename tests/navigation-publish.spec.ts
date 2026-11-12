@@ -28,7 +28,7 @@ test("persistent selection toolbar, top batch entry and adaptive damage referenc
   await page.getByRole("button", { name: "确认", exact: true }).click();
   await nav(page, "时间轴");
   const toolbar = page.locator(".timeline-batch-toolbar");
-  await expect(toolbar.getByRole("button")).toHaveCount(1);
+  await expect(toolbar.getByRole("button")).toHaveCount(5);
   await expect(
     toolbar.getByRole("button", { name: "多选", exact: true }),
   ).toBeVisible();

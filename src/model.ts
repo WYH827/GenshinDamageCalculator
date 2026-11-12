@@ -315,25 +315,31 @@ export type AscensionStat = {
   type: (typeof ASCENSION_STATS)[number];
   value: number;
 };
-export const SANDS_STATS = [
+const COMMON_MAIN_STATS = [
   "atkPercent",
   "hpPercent",
   "defPercent",
   "mastery",
   "notImportant",
 ] as const;
+export const SANDS_STATS = [
+  ...COMMON_MAIN_STATS.filter((s) => s !== "notImportant"),
+  "recharge",
+  "notImportant",
+] as const;
 export const GOBLET_STATS = [
-  ...SANDS_STATS.filter((s) => s !== "notImportant"),
+  ...COMMON_MAIN_STATS.filter((s) => s !== "notImportant"),
   ...(Object.keys(BONUS_STATS) as (keyof typeof BONUS_STATS)[]),
   "notImportant",
 ] as const;
 export const CIRCLET_STATS = [
-  ...SANDS_STATS.filter((s) => s !== "notImportant"),
+  ...COMMON_MAIN_STATS.filter((s) => s !== "notImportant"),
   "critRate",
   "critDamage",
   "notImportant",
 ] as const;
 export const MAIN_STAT_VALUES = {
+  recharge: 51.8,
   hp: 4780,
   atk: 311,
   atkPercent: 46.6,
@@ -421,6 +427,7 @@ export type EffectOrigin = {
   name: string;
 };
 export type Effect = {
+  enabled?: boolean;
   id: string;
   name: string;
   nameMode?: "auto" | "custom";
@@ -587,6 +594,9 @@ export type TimelineEvent = (
       count: number;
     }
 ) & {
+  enabled?: boolean;
+  disabledOccurrences?: string[];
+  disabledEffectKeys?: string[];
   stackCounts?: Record<string, number>;
   effectTimings?: Record<string, EffectTiming>;
   effectUsePresets?: Record<string, boolean>;
@@ -774,26 +784,31 @@ export function assignEquipment<T extends { id: string; characterId: string }>(
   );
 }
 export const timelineEnd = (events: TimelineEvent[]) =>
-  events.reduce(
-    (end, e) =>
-      Math.max(
-        end,
-        e.kind === "skill" &&
-          e.repeat?.duration !== undefined &&
-          e.repeat.duration !== null
-          ? e.time +
-              scheduledCount(e.repeat.duration, e.repeat.interval) *
-                e.repeat.interval
-          : e.time,
-      ),
-    0,
-  );
-export function sortedTimeline(events: TimelineEvent[]) {
+  events
+    .filter((e) => e.enabled !== false)
+    .reduce(
+      (end, e) =>
+        Math.max(
+          end,
+          e.kind === "skill" &&
+            e.repeat?.duration !== undefined &&
+            e.repeat.duration !== null
+            ? e.time +
+                scheduledCount(e.repeat.duration, e.repeat.interval) *
+                  e.repeat.interval
+            : e.time,
+        ),
+      0,
+    );
+export function sortedTimeline(
+  events: TimelineEvent[],
+  includeDisabled = false,
+) {
   const end = timelineEnd(events),
     expanded: TimelineEvent[] = [];
   for (const e of events) {
-    expanded.push(e);
-    if (e.kind !== "skill" || !e.repeat) continue;
+    if (includeDisabled || e.enabled !== false) expanded.push(e);
+    if (e.enabled === false || e.kind !== "skill" || !e.repeat) continue;
     const count = scheduledCount(
       e.repeat.duration ?? Math.max(0, end - e.time),
       e.repeat.interval,
@@ -809,9 +824,12 @@ export function sortedTimeline(events: TimelineEvent[]) {
         time: Number((e.time + i * e.repeat.interval).toPrecision(15)),
         repeat: undefined,
         generatedBy: e.id,
+        enabled: !e.disabledOccurrences?.includes(`${e.id}~${i}`),
       });
   }
-  return expanded.sort((a, b) => a.time - b.time);
+  return expanded
+    .filter((e) => includeDisabled || e.enabled !== false)
+    .sort((a, b) => a.time - b.time);
 }
 // Kept for older callers; non-damaging skills now have fully active effects.
 export function emptySkillEffectKeys(_p: Project) {
@@ -907,7 +925,7 @@ export function effectTargetIds(
 export const TRIGGER_LABELS = {
   weapon: "武器效果",
   artifact: "圣遗物",
-  talent: "天赋",
+  talent: "天赋/命座",
 } as const;
 export function triggerSources(
   p: Project,
@@ -1011,3 +1029,13 @@ export function normalizeAmplification(p: Project): Project {
   });
   return changed ? { ...p, timeline } : p;
 }
+
+export const isConditionalCritEffect = (e: Effect) =>
+  ["暴击率", "暴击伤害"].includes(e.type) &&
+  (!!e.skillFilter ||
+    e.damage.element !== "全部" ||
+    e.damage.attack !== "全部" ||
+    e.damage.scaling !== "全部" ||
+    !!e.damage.special);
+export const allowsDamageFilter = (type: string) =>
+  isDamageEffect(type) || ["暴击率", "暴击伤害"].includes(type);

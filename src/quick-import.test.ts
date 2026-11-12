@@ -108,10 +108,10 @@ describe("GGScanner and Enka quick import", () => {
       false,
     );
     expect(c.artifacts?.importedMainStats.sands).toMatchObject({
-      type: "notImportant",
-      value: 0,
+      type: "recharge",
+      value: 51.8,
     });
-    expect(c.artifacts?.importedMainStats.sands?.label).toContain("51.8%");
+    expect(c.artifacts?.importedMainStats.sands?.label).toBeUndefined();
     expect(c.artifacts?.importedMainStats.goblet?.value).toBe(46.6);
     expect(data.characters[1].weapon).toBeUndefined();
   });
@@ -205,7 +205,7 @@ describe("GGScanner and Enka quick import", () => {
       );
       if (artifacts) {
         const panel = staticPanels(restored, target).outside;
-        expect(panel["元素充能效率"]).toBe(100);
+        expect(panel["元素充能效率"]).toBe(151.8);
         expect(panel["火元素伤害加成"]).toBe(46.6);
       }
       expect(p.artifacts[2].importedMainStats).toBeUndefined();

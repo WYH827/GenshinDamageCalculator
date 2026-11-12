@@ -1,5 +1,6 @@
 import {
   artifactMainStat,
+  isConditionalCritEffect,
   MAIN_SLOTS,
   type MainStats,
   statValue,
@@ -115,7 +116,12 @@ export function createPanelResolver(p: Project, eventId: string) {
           mode === "outside" && e.target === "foreground"
             ? [p.initialCharacterId]
             : effectTargetIds(p, e, eventId);
-        if (e.type !== stat || !targets.includes(id)) continue;
+        if (
+          e.type !== stat ||
+          !targets.includes(id) ||
+          isConditionalCritEffect(e)
+        )
+          continue;
         const amount = evaluate(e, mode) * (row.stacks ?? 1);
         value +=
           effectUnit(e) === "percent" &&

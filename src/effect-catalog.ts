@@ -19,7 +19,7 @@ import { boundedActiveFor } from "./schedule";
 export const EFFECT_SOURCE_LABELS = {
   weapon: "武器",
   artifact: "圣遗物",
-  talent: "天赋",
+  talent: "天赋/命座",
   skill: "技能",
   global: "环境/元素共鸣",
   custom: "独立效果",
@@ -384,6 +384,7 @@ export function migrateEffectEvents(project: Project): Project {
   ): TimelineEvent => ({
     id,
     time: event.time,
+    enabled: event.enabled,
     kind: "effectTrigger",
     effectKey: key,
     timing: legacyTiming(e, event.stackCounts?.[e.id]),

@@ -255,8 +255,8 @@ test("source effect editors start folded, including newly added effects", async 
   await page.getByRole("button", { name: "提供效果", exact: true }).click();
   await page.getByRole("button", { name: "添加效果", exact: true }).click();
   await expect(page.locator(".effect-form")).toBeHidden();
-  await nav(page, "天赋");
-  await page.getByRole("button", { name: "添加天赋", exact: true }).click();
+  await nav(page, "天赋/命座");
+  await page.getByRole("button", { name: "添加天赋/命座", exact: true }).click();
   await page.getByRole("button", { name: "添加效果", exact: true }).click();
   await expect(page.locator(".effect-form")).toBeHidden();
 });

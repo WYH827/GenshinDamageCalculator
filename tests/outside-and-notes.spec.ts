@@ -92,13 +92,13 @@ test("outside toggle syncs from source to library, survives reload, and appears 
   );
   await nav(page, "圣遗物");
   await expect(page.locator(".effect-form")).toBeHidden();
-  await nav(page, "天赋");
+  await nav(page, "天赋/命座");
   await page
-    .getByRole("button", { name: "编辑天赋 天赋测试", exact: true })
+    .getByRole("button", { name: "编辑天赋/命座 天赋测试", exact: true })
     .click();
   await expect(page.locator(".effect-form")).toBeHidden();
   await nav(page, "环境/元素共鸣");
-  await expect(page.locator(".global-card")).toBeHidden();
+  await expect(page.locator(".global-card")).toBeVisible();
   await page.reload();
   await nav(page, "武器");
   await expect(page.locator(".effect-form")).toBeHidden();

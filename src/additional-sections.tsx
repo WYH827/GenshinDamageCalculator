@@ -25,7 +25,7 @@ export function Talents({
   const form = (t: Talent, patch: (v: Partial<Talent>) => void) => (
     <>
       <div className="form-grid two">
-        <Field label="天赋名称">
+        <Field label="天赋/命座名称">
           <input
             value={t.name}
             onChange={(e) => patch({ name: e.target.value })}
@@ -49,8 +49,8 @@ export function Talents({
       </div>
       <EffectsList
         allowGlobal
-        title="天赋效果"
-        sourceType="天赋"
+        title="天赋/命座效果"
+        sourceType="天赋/命座"
         ownerName={t.name}
         value={t.effects}
         onChange={(effects) => patch({ effects })}
@@ -71,8 +71,8 @@ export function Talents({
     <>
       <SectionTitle
         eyebrow="05 / TALENTS"
-        title="角色天赋"
-        description="按角色分组，展开编辑；新增天赋完成后归入对应角色。"
+        title="角色天赋/命座"
+        description="按角色分组，展开编辑；新增天赋/命座完成后归入对应角色。"
       >
         <button
           className="btn primary"
@@ -87,7 +87,7 @@ export function Talents({
           }
         >
           <Plus size={16} />
-          添加天赋
+          添加天赋/命座
         </button>
       </SectionTitle>
       {p.characters.map((c, index) => {
@@ -98,7 +98,7 @@ export function Talents({
             <div className="group-header">
               <Avatar small character={c} index={index} />
               <h3>{charName(c, index)}</h3>
-              <span>{items.length} 个天赋</span>
+              <span>{items.length} 个天赋/命座</span>
               <div />
             </div>
             {items.map((t, i) => (
@@ -108,13 +108,13 @@ export function Talents({
                     className="skill-label"
                     onClick={() => setEditing(editing === t.id ? null : t.id)}
                   >
-                    <strong>{t.name || "未命名天赋"}</strong>
+                    <strong>{t.name || "未命名天赋/命座"}</strong>
                     <span>提供效果 · {t.effects.length} 条</span>
                   </button>
                   <div className="button-group">
                     <button
                       className="icon-btn"
-                      aria-label="天赋上移"
+                      aria-label="天赋/命座上移"
                       disabled={i === 0}
                       onClick={() => move(t.id, items[i - 1].id)}
                     >
@@ -122,7 +122,7 @@ export function Talents({
                     </button>
                     <button
                       className="icon-btn"
-                      aria-label="天赋下移"
+                      aria-label="天赋/命座下移"
                       disabled={i === items.length - 1}
                       onClick={() => move(t.id, items[i + 1].id)}
                     >
@@ -130,14 +130,14 @@ export function Talents({
                     </button>
                     <button
                       className="icon-btn danger"
-                      aria-label={`删除天赋 ${t.name || "未命名"}`}
+                      aria-label={`删除天赋/命座 ${t.name || "未命名"}`}
                       onClick={() => remove(t)}
                     >
                       <Trash2 size={15} />
                     </button>
                     <button
                       className="icon-btn"
-                      aria-label={`编辑天赋 ${t.name || "未命名"}`}
+                      aria-label={`编辑天赋/命座 ${t.name || "未命名"}`}
                       onClick={() => setEditing(editing === t.id ? null : t.id)}
                     >
                       <ChevronDown size={17} />
@@ -171,12 +171,12 @@ export function Talents({
         );
       })}
       {!p.talents.length && !draft && (
-        <p className="info-strip">暂无天赋，点击添加后配置效果。</p>
+        <p className="info-strip">暂无天赋/命座，点击添加后配置效果。</p>
       )}
       {draft && (
         <div className="panel draft-card talent-draft">
           <div className="panel-header">
-            <h3>新增天赋</h3>
+            <h3>新增天赋/命座</h3>
             <span className="soft-badge">草稿</span>
           </div>
           <div className="panel-body">

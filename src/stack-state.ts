@@ -10,7 +10,7 @@ export function stackEffectSources(p: Project): StackSource[] {
   for (const [kind, owners, label] of [
     ["weapon", p.weapons, "武器"],
     ["artifact", p.artifacts, "圣遗物"],
-    ["talent", p.talents, "天赋"],
+    ["talent", p.talents, "天赋/命座"],
     ["skill", p.skills.filter((s) => s.kind !== "damage"), "技能"],
   ] as const) {
     for (const owner of owners)

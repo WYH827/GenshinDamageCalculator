@@ -1,3 +1,4 @@
+import EnableToggle from "./EnableToggle";
 import EffectSourceVisual from "./EffectSourceVisual";
 import CharacterVisual from "./CharacterVisual";
 import TimelineEventGroup from "./TimelineEventGroup";
@@ -13,6 +14,7 @@ import {
 import { SectionTitle, type Update } from "./sections";
 import {
   effectCatalog,
+  updateCatalogEffect,
   defaultTiming,
   isStackingEffect,
   skillBoundEffects,
@@ -21,6 +23,7 @@ import {
   type EffectSourceKind,
 } from "./effect-catalog";
 import TimelineBatchControls from "./TimelineBatchControls";
+import { copyTimelineEvent } from "./timeline-batch";
 import ScheduleEditor from "./ScheduleEditor";
 import { realtimeTimeline, effectEventBadge } from "./realtime-state";
 import EffectTimingEditor, { timingSummary } from "./EffectTimingEditor";
@@ -205,7 +208,7 @@ export default function TimelineSection({
   };
   const ordered = useMemo(() => {
     try {
-      return sortedTimeline(p.timeline);
+      return sortedTimeline(p.timeline, true);
     } catch {
       return [...p.timeline].sort((a, b) => a.time - b.time);
     }
@@ -264,39 +267,7 @@ export default function TimelineSection({
         eyebrow="COMBAT TIMELINE"
         title="编排战斗时间轴"
         description="效果数值引用原定义；持续时间、层数及更改方式在每次触发中独立设置。"
-      >
-        <div className="button-group timeline-actions">
-          <button className="btn" onClick={newDraft}>
-            <Plus size={16} />
-            触发效果
-          </button>
-          <button
-            className="btn"
-            onClick={() =>
-              setSwitchDraft({
-                time: endTime(p),
-                characterId: p.initialCharacterId,
-              })
-            }
-          >
-            切换角色
-          </button>
-          <button className="btn" onClick={() => setAddingBatch(true)}>
-            批量添加技能
-          </button>
-          <button
-            className="btn primary"
-            onClick={() =>
-              setSkillDraft({
-                time: endTime(p),
-                skillId: p.skills[0]?.id ?? "",
-              })
-            }
-          >
-            添加技能事件
-          </button>
-        </div>
-      </SectionTitle>
+      ></SectionTitle>
       <TimelineBatchControls
         project={p}
         update={update}
@@ -306,6 +277,39 @@ export default function TimelineSection({
         onSelecting={setSelecting}
         adding={addingBatch}
         onAdding={setAddingBatch}
+        actions={
+          <div className="button-group timeline-actions">
+            <button className="btn" onClick={newDraft}>
+              <Plus size={16} />
+              触发效果
+            </button>
+            <button
+              className="btn"
+              onClick={() =>
+                setSwitchDraft({
+                  time: endTime(p),
+                  characterId: p.initialCharacterId,
+                })
+              }
+            >
+              切换角色
+            </button>
+            <button className="btn" onClick={() => setAddingBatch(true)}>
+              批量添加技能
+            </button>
+            <button
+              className="btn primary"
+              onClick={() =>
+                setSkillDraft({
+                  time: endTime(p),
+                  skillId: p.skills[0]?.id ?? "",
+                })
+              }
+            >
+              添加技能事件
+            </button>
+          </div>
+        }
       />
       <div className="timeline-legend">
         <span className="legend-skill">技能事件</span>
@@ -348,11 +352,11 @@ export default function TimelineSection({
               setGlobalsExpanded(!globalsExpanded);
             }}
           >
-            0.00s · 全局效果（{automatic.length}）· 仅展示，始终参与计算
+            0.00s · 全局效果（{automatic.length}）· 已开启的效果参与计算
           </summary>
           {automatic.map((r) => (
             <div
-              className="timeline-row global-event event-effect readonly-event"
+              className={`timeline-row global-event event-effect readonly-event ${r.effect.enabled === false ? "is-disabled" : ""}`}
               key={r.key}
             >
               <div className="timeline-time">
@@ -362,13 +366,25 @@ export default function TimelineSection({
                 <EffectSourceVisual project={p} entry={r} />
                 <div>
                   <strong>{r.effect.name || "未命名全局效果"}</strong>
-                  <span>{r.source} · 始终生效</span>
+                  <span>
+                    {r.source} ·{" "}
+                    {r.effect.enabled === false ? "已禁用" : "始终生效"}
+                  </span>
                 </div>
               </div>
               <div className="event-detail">
                 <span>{effectSummary(r.effect)}</span>
                 <small>不参与时间轴 · 实时变量按事件求值</small>
               </div>
+              <EnableToggle
+                enabled={r.effect.enabled}
+                label={`效果 ${r.effect.name}`}
+                onChange={(enabled) =>
+                  update((p) =>
+                    updateCatalogEffect(p, r.key, { ...r.effect, enabled }),
+                  )
+                }
+              />
               <button
                 className="icon-btn"
                 aria-label={`查看全局效果 ${r.effect.name}`}
@@ -429,7 +445,7 @@ export default function TimelineSection({
                 className={`timeline-event-group ${generated ? "generated-event-group" : ""}`}
               >
                 <div
-                  className={`timeline-row event-${category} ${generated ? "readonly-event" : ""} ${selectedIds.has(e.id) ? "event-selected" : ""}`}
+                  className={`timeline-row event-${category} ${e.enabled === false || r?.effect.enabled === false ? "is-disabled" : ""} ${generated ? "readonly-event" : ""} ${selectedIds.has(e.id) ? "event-selected" : ""}`}
                 >
                   {selecting && !generated && (
                     <input
@@ -746,55 +762,74 @@ export default function TimelineSection({
                         </div>
                       )}
                   </div>
-                  {!generated && (
-                    <div className="button-group">
-                      {e.kind === "effectTrigger" && (
+                  <div className="button-group event-controls">
+                    <EnableToggle
+                      enabled={e.enabled}
+                      label={`事件 ${title} ${e.time}s`}
+                      onChange={(enabled) => {
+                        if (e.kind === "skill" && e.generatedBy)
+                          patchEvent(e.generatedBy, (parent) => ({
+                            ...parent,
+                            disabledOccurrences: enabled
+                              ? parent.disabledOccurrences?.filter(
+                                  (id) => id !== e.id,
+                                )
+                              : [...(parent.disabledOccurrences ?? []), e.id],
+                          }));
+                        else
+                          patchEvent(e.id, (event) => ({ ...event, enabled }));
+                      }}
+                    />
+                    {!generated && (
+                      <>
+                        {e.kind === "effectTrigger" && (
+                          <button
+                            className="icon-btn"
+                            aria-label={`编辑事件 ${title}`}
+                            onClick={() =>
+                              setDraft({
+                                id: e.id,
+                                time: e.time,
+                                kind: r?.kind ?? "weapon",
+                                effectKey: e.effectKey,
+                                timing: e.timing,
+                                usePreset: e.usePreset === true,
+                              })
+                            }
+                          >
+                            <Pencil size={14} />
+                          </button>
+                        )}
                         <button
                           className="icon-btn"
-                          aria-label={`编辑事件 ${title}`}
+                          aria-label={`复制事件 ${title}`}
                           onClick={() =>
-                            setDraft({
-                              id: e.id,
-                              time: e.time,
-                              kind: r?.kind ?? "weapon",
-                              effectKey: e.effectKey,
-                              timing: e.timing,
-                              usePreset: e.usePreset === true,
-                            })
+                            append(copyTimelineEvent(e))
                           }
                         >
-                          <Pencil size={14} />
+                          <Copy size={14} />
                         </button>
-                      )}
-                      <button
-                        className="icon-btn"
-                        aria-label={`复制事件 ${title}`}
-                        onClick={() =>
-                          append({ ...structuredClone(e), id: uid() })
-                        }
-                      >
-                        <Copy size={14} />
-                      </button>
-                      <button
-                        className="icon-btn danger"
-                        aria-label={`删除事件 ${title}`}
-                        onClick={() =>
-                          update((p) => ({
-                            ...p,
-                            timeline: p.timeline.filter((x) => x.id !== e.id),
-                          }))
-                        }
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  )}
+                        <button
+                          className="icon-btn danger"
+                          aria-label={`删除事件 ${title}`}
+                          onClick={() =>
+                            update((p) => ({
+                              ...p,
+                              timeline: p.timeline.filter((x) => x.id !== e.id),
+                            }))
+                          }
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
                 {!!bound.length && (
                   <div className="bound-effects-children">
                     {bound.map((entry) => (
                       <div
-                        className={`timeline-row bound-effect-row event-effect ${generated ? "readonly-event" : ""}`}
+                        className={`timeline-row bound-effect-row event-effect ${e.enabled === false || entry.effect.enabled === false || e.disabledEffectKeys?.includes(entry.key) ? "is-disabled" : ""} ${generated ? "readonly-event" : ""}`}
                         key={`${e.id}-${entry.key}`}
                       >
                         <div className="timeline-time">
@@ -825,6 +860,27 @@ export default function TimelineSection({
                             <small>效果 · 自动绑定触发，跟随循环规则</small>
                           ) : (
                             boundEditor(entry, e)
+                          )}
+                          {!generated && (
+                            <EnableToggle
+                              enabled={
+                                !e.disabledEffectKeys?.includes(entry.key)
+                              }
+                              label={`绑定效果 ${entry.effect.name} ${e.time}s`}
+                              onChange={(enabled) =>
+                                patchEvent(e.id, (event) => ({
+                                  ...event,
+                                  disabledEffectKeys: enabled
+                                    ? event.disabledEffectKeys?.filter(
+                                        (key) => key !== entry.key,
+                                      )
+                                    : [
+                                        ...(event.disabledEffectKeys ?? []),
+                                        entry.key,
+                                      ],
+                                }))
+                              }
+                            />
                           )}
                           {(e.effectUsePresets?.[entry.key] ??
                             e.effectUsePresets?.[entry.effect.id]) ===
@@ -971,7 +1027,8 @@ export default function TimelineSection({
                   timing: draft.timing,
                   usePreset: draft.usePreset,
                 };
-                if (draft.id) patchEvent(draft.id, () => event);
+                if (draft.id)
+                  patchEvent(draft.id, (old) => ({ ...old, ...event }));
                 else append(event);
                 setDraft(null);
               }}

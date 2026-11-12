@@ -80,7 +80,7 @@ describe("periodic realtime damage effects starting from zero", () => {
     expect(
       activeEffectsAt(parseProject(p), "hit1.5").find((r) => r.key === key)
         ?.effect.name,
-    ).toBe("奥黛塔天赋华彩（队友）");
+    ).toBe("奥黛塔天赋/命座华彩（队友）");
   });
   it("zero/negative deltas never grow, duration expires, and a direct zero clears a schedule", () => {
     const { p } = fixture();
@@ -122,7 +122,7 @@ describe("automatic effect names", () => {
     expect(effectCatalog(next).map((r) => r.effect.name)).toEqual([
       "奥黛塔武器星锋剑",
       "奥黛塔圣遗物测试套装",
-      "奥黛塔天赋华彩（队友）",
+      "奥黛塔天赋/命座华彩（队友）",
       "桑多涅技能测试E",
     ]);
     const saved = parseProject(JSON.parse(JSON.stringify(next)));
@@ -142,19 +142,19 @@ describe("automatic effect names", () => {
     next.talents[0].name = "新天赋";
     const renamed = syncEffectNames(next);
     expect(renamed.talents[0].effects.map((e) => e.name)).toEqual([
-      "新角色天赋新天赋",
+      "新角色天赋/命座新天赋",
       "手动名称",
       "旧名称",
     ]);
     const defaultName = defaultEffectName(
       renamed.characters,
       renamed.characters[1].id,
-      "天赋",
+      "天赋/命座",
       "新天赋",
     );
     expect(
       namedEffect({ ...e, nameMode: "auto", name: "old" }, defaultName).name,
-    ).toBe("新角色天赋新天赋");
+    ).toBe("新角色天赋/命座新天赋");
     expect(
       namedEffect({ ...e, nameMode: "custom", name: "" }, defaultName).name,
     ).toBe("");

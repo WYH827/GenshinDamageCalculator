@@ -69,7 +69,7 @@ test("mainstats, physical bonus, weapon elemental stats and ignored options pers
   ).toHaveCount(1);
   await expect(
     a.getByLabel("沙主词条", { exact: true }).locator("option"),
-  ).toHaveCount(5);
+  ).toHaveCount(6);
   await expect(
     a.getByLabel("杯主词条", { exact: true }).locator("option"),
   ).toHaveCount(13);

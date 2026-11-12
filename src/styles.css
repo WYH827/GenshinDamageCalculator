@@ -4419,3 +4419,21 @@ select:disabled {
 @media(max-width:760px){.app-shell:has(.timeline-batch-toolbar) .toast{bottom:160px;}}
 
 .official-library{margin-top:18px;}.official-empty{padding:24px 15px;text-align:center;color:#75846a;background:#f5f8ef;border-radius:10px;}.official-empty p{font-size:12px;margin-top:8px;}.official-preset-card{display:flex;flex-direction:column;gap:6px;width:100%;padding:14px;margin:10px 0;text-align:left;border:1px solid #dfe8d7;border-radius:9px;background:#fcfdf9;}.official-preset-card.selected{border-color:#799c6c;background:#eff5e7;}.official-preset-card span,.official-preset-card small{color:#829173;font-size:12px;}.official-preview{padding:18px;border:1px solid #dce7d3;border-radius:10px;margin:15px 0;background:#f8fbf3;}.official-preview p{font-size:12px;line-height:1.8;color:#778b6c;margin:8px 0;}.official-footer{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-top:18px;font-size:11px;color:#6e885c;}
+
+/* Persistent timeline creation and selection controls. */
+.timeline-batch-toolbar.is-idle { left:calc(var(--sidebar-width) + 28px); right:28px; padding:10px 14px; background:#fafcf5f5; border:1px solid #b8caaa; }
+.timeline-batch-toolbar .timeline-actions { flex:1; flex-wrap:wrap; gap:8px; }
+.timeline-batch-toolbar.is-idle > .btn { margin-left:auto; }
+.is-disabled { opacity:.55; }
+.is-disabled .event-name, .is-disabled .event-detail, .is-disabled .global-content, .is-disabled .soft-badge, .is-disabled .event-skill-select, .is-disabled .timeline-time { text-decoration:line-through; text-decoration-thickness:1.5px; }
+.enable-toggle[aria-pressed="false"] { color:#8b645d; }
+.enable-toggle[aria-pressed="true"] { color:#3a7550; }
+@media(max-width:760px){
+ .timeline-batch-toolbar.is-idle{left:10px;right:10px;padding:8px;gap:6px;}
+ .timeline-batch-toolbar .timeline-actions{gap:5px;}
+ .timeline-batch-toolbar.is-idle>.btn{padding:9px 12px;}
+}
+
+.official-enka-fallback{border:1px solid #d7e2d0;border-radius:10px;padding:12px;margin-top:14px;background:#f7faf3;}
+.official-enka-fallback summary{cursor:pointer;font-weight:600;}
+.official-enka-fallback textarea{width:100%;resize:vertical;font-family:monospace;font-size:12px;}

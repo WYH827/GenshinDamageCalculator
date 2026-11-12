@@ -8,7 +8,12 @@ export function defaultEffectName(
 ) {
   const index = characters.findIndex((c) => c.id === sourceId);
   const character = index < 0 ? "" : charName(characters[index], index);
-  return `${character}${sourceType}${ownerName.trim()}`;
+  const name = ownerName.trim();
+  const suffix =
+    sourceType === "技能" && character && name.startsWith(character)
+      ? name.slice(character.length).trimStart()
+      : name;
+  return `${character}${sourceType}${suffix}`;
 }
 export const automaticEffectName = (e: Effect) =>
   e.nameMode === "auto" || (!e.nameMode && !e.name.trim());
@@ -39,7 +44,7 @@ export function syncEffectNames(p: Project): Project {
     ...p,
     weapons: names(p.weapons, "武器"),
     artifacts: names(p.artifacts, "圣遗物"),
-    talents: names(p.talents, "天赋"),
+    talents: names(p.talents, "天赋/命座"),
     skills: names(p.skills, "技能"),
     globals: p.globals.map((e) => namedEffect(e, "环境/元素共鸣")),
     customEffects: (p.customEffects ?? []).map((e) =>

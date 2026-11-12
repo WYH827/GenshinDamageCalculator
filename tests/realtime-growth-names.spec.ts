@@ -73,7 +73,7 @@ test("zero-start realtime stacks appear in worker damage and detail", async ({
   await expect(page.locator(".damage-value").nth(2)).toContainText("2,070");
   await page.locator(".damage-event summary").nth(1).click();
   await expect(page.locator(".active-effects")).toContainText(
-    "奥黛塔天赋华彩（队友）",
+    "奥黛塔天赋/命座华彩（队友）",
   );
   await expect(page.locator(".active-effects")).toContainText("当前层数：1 层");
   await expect(page.locator(".active-effects")).toContainText("效果数值：15%");
@@ -101,9 +101,9 @@ test("new effect names follow character, type and owner, with custom and reset b
       expected,
     );
   }
-  await nav(page, "天赋");
-  await page.getByRole("button", { name: "添加天赋", exact: true }).click();
-  await page.getByLabel("天赋名称", { exact: true }).fill("攻击转精通");
+  await nav(page, "天赋/命座");
+  await page.getByRole("button", { name: "添加天赋/命座", exact: true }).click();
+  await page.getByLabel("天赋/命座名称", { exact: true }).fill("攻击转精通");
   await page.getByRole("button", { name: "添加效果", exact: true }).click();
   await page
     .locator(".effect-details")
@@ -111,14 +111,14 @@ test("new effect names follow character, type and owner, with custom and reset b
     .locator(":scope > summary")
     .click();
   await expect(page.getByLabel("效果名称", { exact: true })).toHaveValue(
-    "桑多涅天赋攻击转精通",
+    "桑多涅天赋/命座攻击转精通",
   );
-  await page.getByLabel("天赋名称", { exact: true }).fill("新的天赋");
+  await page.getByLabel("天赋/命座名称", { exact: true }).fill("新的天赋");
   await expect(page.getByLabel("效果名称", { exact: true })).toHaveValue(
-    "桑多涅天赋新的天赋",
+    "桑多涅天赋/命座新的天赋",
   );
   await page.getByLabel("效果名称", { exact: true }).fill("自定义名称");
-  await page.getByLabel("天赋名称", { exact: true }).fill("最终天赋");
+  await page.getByLabel("天赋/命座名称", { exact: true }).fill("最终天赋");
   await expect(page.getByLabel("效果名称", { exact: true })).toHaveValue(
     "自定义名称",
   );
@@ -154,7 +154,7 @@ test("new effect names follow character, type and owner, with custom and reset b
     .getByRole("button", { name: "恢复默认名称", exact: true })
     .click();
   await expect(dialog.getByLabel("效果名称", { exact: true })).toHaveValue(
-    "新角色天赋最终天赋",
+    "新角色天赋/命座最终天赋",
   );
   await dialog.getByRole("button", { name: "完成编辑", exact: true }).click();
   await expect
@@ -165,9 +165,9 @@ test("new effect names follow character, type and owner, with custom and reset b
         STORAGE_KEY,
       ),
     )
-    .toBe("新角色天赋最终天赋");
+    .toBe("新角色天赋/命座最终天赋");
   await page.reload();
   await nav(page, "效果列表");
   await page.getByRole("tab", { name: /实时效果/ }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("新角色天赋最终天赋");
+  await expect(page.getByRole("tabpanel")).toContainText("新角色天赋/命座最终天赋");
 });

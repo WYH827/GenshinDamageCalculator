@@ -1,6 +1,29 @@
 import { enkaApiUrl, usesPublicEnkaRelay } from "./site-config";
 const cache = new Map<string, { expires: number; data: unknown }>();
 let relayRetryAt = 0;
+export const officialEnkaUrl = (uid: string) => {
+  if (!/^[1-9]\d{8,9}$/.test(uid)) throw new Error("请输入9或10位数字UID");
+  return `https://enka.network/api/uid/${uid}/`;
+};
+export function parseOfficialEnkaText(text: string, uid: string): unknown {
+  officialEnkaUrl(uid);
+  if (text.length > 16 * 1024 * 1024) throw new Error("响应过大");
+  let data;
+  try {
+    data = JSON.parse(text.trim());
+  } catch {
+    throw new Error("请粘贴官方接口返回的完整JSON，不要粘贴网页地址或错误页面");
+  }
+  if (
+    !data ||
+    typeof data !== "object" ||
+    (!data.playerInfo && !Array.isArray(data.avatarInfoList))
+  )
+    throw new Error("未读取到Enka账号数据");
+  if (data.uid != null && String(data.uid) !== uid)
+    throw new Error("JSON中的UID与输入的UID不一致");
+  return data;
+}
 
 // Reader wraps the unmodified API text in data.content. Only accept JSON from
 // the exact requested Enka UID endpoint; never interpret prose or rendered HTML.
@@ -55,6 +78,10 @@ export async function fetchEnka(
     const text = await r.text();
     if (text.length > 16 * 1024 * 1024) throw new Error("响应过大");
     if (!r.ok) {
+      if (relay && (r.status === 401 || r.status === 403))
+        throw new Error(
+          "公共服务限制了匿名查询，请使用下方“从Enka官方读取并粘贴JSON”。无需账号或下载文件",
+        );
       if (relay && r.status === 429) {
         const retry = r.headers.get("Retry-After");
         const seconds =

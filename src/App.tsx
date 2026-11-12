@@ -101,7 +101,7 @@ const TABS = [
   { id: "weapons", label: "武器", sub: "WEAPONS", icon: Swords },
   { id: "skills", label: "技能", sub: "SKILLS", icon: Crosshair },
   { id: "artifacts", label: "圣遗物", sub: "ARTIFACTS", icon: Gem },
-  { id: "talents", label: "天赋", sub: "TALENTS", icon: Leaf },
+  { id: "talents", label: "天赋/命座", sub: "TALENTS", icon: Leaf },
   { id: "globals", label: "环境/元素共鸣", sub: "ENVIRONMENT", icon: Sparkles },
   { id: "effects", label: "效果列表", sub: "EFFECT LIBRARY", icon: Sparkles },
   { id: "enemy", label: "敌方属性", sub: "ENEMY", icon: Crosshair },
@@ -398,8 +398,8 @@ export default function App() {
             update={update}
             remove={(t) =>
               setConfirm({
-                title: `删除天赋「${t.name || "未命名"}」？`,
-                detail: "引用该天赋的触发事件也将一并删除。",
+                title: `删除天赋/命座「${t.name || "未命名"}」？`,
+                detail: "引用该天赋/命座的触发事件也将一并删除。",
                 action: () => update((p) => deleteTalent(p, t.id)),
               })
             }
@@ -430,7 +430,7 @@ export default function App() {
                 <Empty
                   icon={<Sparkles size={28} />}
                   title="让队伍的加成在这里汇合"
-                  detail="添加队伍增益或敌方抗性变化；角色天赋请在独立天赋板块配置。"
+                  detail="添加队伍增益或敌方抗性变化；角色天赋/命座请在独立天赋/命座板块配置。"
                   action={
                     <button className="btn" onClick={() => addEffect()}>
                       <Plus size={16} />
@@ -442,7 +442,11 @@ export default function App() {
             ) : (
               <div className="global-list">
                 {project.globals.map((e) => (
-                  <EffectFold key={e.id} title={e.name || "未命名效果"}>
+                  <EffectFold
+                    defaultOpen
+                    key={e.id}
+                    title={e.name || "未命名效果"}
+                  >
                     <div className="panel global-card">
                       <div className="effect-mark">
                         <Sparkles size={20} />
@@ -809,7 +813,7 @@ export default function App() {
             onClose={() => setResetOpen(false)}
           >
             <p className="confirm-detail">
-              将清空当前队伍、装备、技能、天赋、效果与时间轴，并恢复默认敌方属性。角色与武器预设库会保留。
+              将清空当前队伍、装备、技能、天赋/命座、效果与时间轴，并恢复默认敌方属性。角色与武器预设库会保留。
             </p>
             <p className="input-note">
               “保存当前方案并重置”会先导出

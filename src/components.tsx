@@ -35,7 +35,7 @@ import {
   effectTypeName,
   effectTypeNote,
   isEnemyEffect,
-  isDamageEffect,
+  allowsDamageFilter,
   PERCENT_EFFECTS,
   STATS,
   ALL_STATS,
@@ -269,6 +269,7 @@ export function DamageEditor({
       <div className="form-grid three">
         <Field label="属性">
           <select
+            aria-label="属性"
             value={value.element}
             onChange={(e) => update("element", e.target.value)}
           >
@@ -279,6 +280,7 @@ export function DamageEditor({
         </Field>
         <Field label="伤害类型">
           <select
+            aria-label="伤害类型"
             value={value.attack}
             onChange={(e) => update("attack", e.target.value)}
           >
@@ -289,6 +291,7 @@ export function DamageEditor({
         </Field>
         <Field label="乘区">
           <select
+            aria-label="乘区"
             value={value.scaling}
             onChange={(e) => update("scaling", e.target.value)}
           >
@@ -754,12 +757,17 @@ export function EffectEditor({
           对象跟随时间轴的前台角色；切换角色后，后续事件使用新的场上角色。
         </p>
       )}
-      {isDamageEffect(value.type) && (
+      {allowsDamageFilter(value.type) && (
         <DamageEditor
           filter
           value={value.damage}
           onChange={(damage) => update({ damage })}
         />
+      )}
+      {["暴击率", "暴击伤害"].includes(value.type) && (
+        <p className="input-note">
+          限定属性仅增加匹配伤害的暴击区，不写入通用实时面板；选择全部时作为通用属性加成。
+        </p>
       )}
       {value.type === "增幅反应增伤" && (
         <>
@@ -1104,15 +1112,17 @@ export function EffectsList({
   );
 }
 export function EffectFold({
+  defaultOpen = false,
   title,
   actions,
   children,
 }: {
+  defaultOpen?: boolean;
   title: ReactNode;
   actions?: ReactNode;
   children: ReactNode;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(defaultOpen);
   return (
     <details className="effect-details" open={expanded}>
       <summary

@@ -36,7 +36,7 @@ export type ActiveEffect = {
 };
 export function globalEffects(p: Project): ActiveEffect[] {
   return effectCatalog(p)
-    .filter((e) => e.automatic)
+    .filter((e) => e.automatic && e.effect.enabled !== false)
     .map((e) => ({
       key: e.key,
       effect: { ...e.effect, duration: null, stacks: undefined },
@@ -71,7 +71,7 @@ function legacyActiveEffectsAt(p: Project, eventId: string): ActiveEffect[] {
   const labels = {
     weapon: "武器",
     artifact: "圣遗物",
-    talent: "天赋",
+    talent: "天赋/命座",
     skill: "技能",
     global: "全局效果",
   };
@@ -128,7 +128,7 @@ function legacyActiveEffectsAt(p: Project, eventId: string): ActiveEffect[] {
       const entry = definitions.get(event.effectKey);
       if (!entry)
         throw new Error("触发事件引用的效果不存在，请重新选择效果来源");
-      if (entry.automatic) continue;
+      if (entry.automatic || entry.effect.enabled === false) continue;
       if (entry.effect.realtime) continue;
       applyTiming(
         entry.key,
@@ -142,7 +142,11 @@ function legacyActiveEffectsAt(p: Project, eventId: string): ActiveEffect[] {
       );
     } else if (event.kind === "stacks") {
       if (disabledKeys.has(event.effectKey)) continue;
-      if (definitions.get(event.effectKey)?.automatic) continue;
+      if (
+        definitions.get(event.effectKey)?.automatic ||
+        definitions.get(event.effectKey)?.effect.enabled === false
+      )
+        continue;
       const entry = catalog.get(event.effectKey);
       if (!entry) throw new Error("层数事件引用的效果不存在或未启用多层效果");
       const source = `${name(entry.effect.sourceId)} · ${entry.source}`;
@@ -153,6 +157,7 @@ function legacyActiveEffectsAt(p: Project, eventId: string): ActiveEffect[] {
       );
     } else if (
       event.kind === "effect" &&
+      event.effect.enabled !== false &&
       (event.effect.stacks?.enabled || active(event.effect, event.time))
     ) {
       const e = event.effect;
@@ -171,6 +176,8 @@ function legacyActiveEffectsAt(p: Project, eventId: string): ActiveEffect[] {
       if (s && s.kind !== "damage")
         for (const e of s.effects)
           if (
+            e.enabled !== false &&
+            !event.disabledEffectKeys?.includes(`skill-${s.id}-${e.id}`) &&
             !isGlobalEffect(e) &&
             !e.realtime &&
             (event.effectTimings || e.stacks?.enabled || active(e, event.time))
@@ -199,7 +206,7 @@ function legacyActiveEffectsAt(p: Project, eventId: string): ActiveEffect[] {
       const owner = triggerSource(p, event);
       if (!owner) continue;
       for (const e of owner.effects.filter(
-        (e) => !isGlobalEffect(e) && !e.realtime,
+        (e) => e.enabled !== false && !isGlobalEffect(e) && !e.realtime,
       )) {
         const key = `${event.sourceKind}-${owner.id}-${e.id}`;
         const row = {

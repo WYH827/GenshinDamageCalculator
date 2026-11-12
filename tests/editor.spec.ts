@@ -179,7 +179,7 @@ test("keyboard decimals, negative effects, selected teammates and variables surv
   await input.press("Tab");
   await expect(input).toHaveValue("-12.5");
   await dialog.getByRole("button", { name: "保存效果" }).click();
-  await page.locator(".effect-details > summary").click();
+  await expect(page.locator(".effect-details")).toHaveAttribute("open", "");
   await page
     .getByRole("button", { name: "编辑效果 自选减抗", exact: true })
     .click();

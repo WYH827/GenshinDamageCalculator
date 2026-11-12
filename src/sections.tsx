@@ -753,6 +753,12 @@ export function SkillForm({
             onChange={(characterId) =>
               patch({
                 characterId,
+                name:
+                  !value.name ||
+                  value.name ===
+                    characters.find((c) => c.id === value.characterId)?.name
+                    ? (characters.find((c) => c.id === characterId)?.name ?? "")
+                    : value.name,
                 effects: value.effects.map((e) => ({
                   ...e,
                   sourceId: characterId,
@@ -866,7 +872,7 @@ export function Skills({
   const [editing, setEditing] = useState<string | null>(null);
   function add() {
     if (!draft) {
-      setDraft(skill(p.characters[0].id));
+      setDraft({ ...skill(p.characters[0].id), name: p.characters[0].name });
       setTimeout(
         () =>
           document

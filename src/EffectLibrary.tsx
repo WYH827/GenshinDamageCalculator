@@ -1,3 +1,4 @@
+import EnableToggle from "./EnableToggle";
 import { useState } from "react";
 import EffectSourceVisual from "./EffectSourceVisual";
 import { Plus } from "lucide-react";
@@ -89,7 +90,10 @@ export default function EffectLibrary({
                 </div>
                 <div className="global-list">
                   {grouped.map((r) => (
-                    <div className="panel global-card" key={r.key}>
+                    <div
+                      className={`panel global-card ${r.effect.enabled === false ? "is-disabled" : ""}`}
+                      key={r.key}
+                    >
                       <EffectSourceVisual project={p} entry={r} />
                       <div className="global-content">
                         <h3>{r.effect.name || "未命名效果"}</h3>
@@ -97,10 +101,24 @@ export default function EffectLibrary({
                         <p>{effectSummary(r.effect)}</p>
                       </div>
                       <span className="soft-badge">
-                        {global
-                          ? "始终生效"
-                          : REALTIME_KINDS[realtimeConfig(r.effect).kind]}
+                        {r.effect.enabled === false
+                          ? "已禁用"
+                          : global
+                            ? "始终生效"
+                            : REALTIME_KINDS[realtimeConfig(r.effect).kind]}
                       </span>
+                      <EnableToggle
+                        enabled={r.effect.enabled}
+                        label={`效果 ${r.effect.name}`}
+                        onChange={(enabled) =>
+                          update((p) =>
+                            updateCatalogEffect(p, r.key, {
+                              ...r.effect,
+                              enabled,
+                            }),
+                          )
+                        }
+                      />
                       <button
                         className="btn small-btn"
                         aria-label={`编辑汇总效果 ${r.effect.name}`}

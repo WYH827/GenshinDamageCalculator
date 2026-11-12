@@ -1,6 +1,10 @@
 import CharacterVisual from "./CharacterVisual";
 import { usesPublicEnkaRelay } from "./site-config";
-import { fetchEnka } from "./enka-client";
+import {
+  fetchEnka,
+  officialEnkaUrl,
+  parseOfficialEnkaText,
+} from "./enka-client";
 import EquipmentVisual from "./EquipmentVisual";
 import { useEffect, useRef, useState } from "react";
 import { CharacterSelect, Field, Modal } from "./components";
@@ -48,6 +52,9 @@ export default function QuickImport({
     }),
     [sourceKey, setSourceKey] = useState("");
   const [batch, setBatch] = useState(false);
+  const [officialOpen, setOfficialOpen] = useState(false),
+    [officialText, setOfficialText] = useState("");
+  const validUid = /^[1-9]\d{8,9}$/.test(uidValue.trim());
   const [mappings, setMappings] = useState<ImportMapping[]>([]);
   const [batchOptions, setBatchOptions] = useState<QuickImportOptions>({});
   const [targetId, setTargetId] = useState(project.characters[0].id);
@@ -110,8 +117,10 @@ export default function QuickImport({
       const json = await fetchEnka(uidValue.trim(), controller.signal);
       if (id === sequence.current) select(parseEnkaImport(json));
     } catch (e) {
-      if (id === sequence.current && !controller.signal.aborted)
+      if (id === sequence.current && !controller.signal.aborted) {
         setError((e as Error).message || "读取失败，请检查网络");
+        setOfficialOpen(true);
+      }
     } finally {
       if (id === sequence.current) setLoading(false);
     }
@@ -250,10 +259,72 @@ export default function QuickImport({
               >
                 Jina Reader
               </a>{" "}
-              读取Enka公开JSON，UID将发送给该服务。无需登录或API
-              Key；数据有缓存，查询过快时请等待后重试。
+              尝试自动读取Enka公开JSON，UID将发送给该服务。匿名请求可能受限制；失败时可使用下方官方直读方式。
             </p>
           )}
+          <details className="official-enka-fallback" open={officialOpen}>
+            <summary
+              onClick={(event) => {
+                event.preventDefault();
+                setOfficialOpen(!officialOpen);
+              }}
+            >
+              从Enka官方读取并粘贴JSON（免账号）
+            </summary>
+            <p className="input-note">
+              先输入UID，打开官方接口；在新页面按Ctrl+A、Ctrl+C，回到这里粘贴，再点击预览。此方式直接访问Enka，不经过公共转发，也不需要下载文件。
+            </p>
+            {validUid ? (
+              <a
+                className="btn"
+                href={officialEnkaUrl(uidValue.trim())}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => {
+                  try {
+                    localStorage.setItem(LAST_ENKA_UID_KEY, uidValue.trim());
+                  } catch {
+                    /* optional persistence */
+                  }
+                }}
+              >
+                打开此UID的Enka官方JSON
+              </a>
+            ) : (
+              <p className="input-note">请输入9或10位数字UID以打开官方接口。</p>
+            )}
+            <Field label="Enka官方JSON内容">
+              <textarea
+                aria-label="Enka官方JSON内容"
+                rows={5}
+                value={officialText}
+                placeholder="在此粘贴官方接口返回的完整JSON"
+                onChange={(event) => setOfficialText(event.target.value)}
+              />
+            </Field>
+            <button
+              className="btn"
+              disabled={!validUid || !officialText.trim()}
+              onClick={() => {
+                cancelLoad();
+                setAccount(null);
+                setError("");
+                try {
+                  select(
+                    parseEnkaImport(
+                      parseOfficialEnkaText(officialText, uidValue.trim()),
+                    ),
+                  );
+                  setOfficialText("");
+                  setOfficialOpen(false);
+                } catch (e) {
+                  setError((e as Error).message);
+                }
+              }}
+            >
+              预览官方JSON
+            </button>
+          </details>
         </div>
       )}
       {loading && <p role="status">正在读取角色数据…</p>}

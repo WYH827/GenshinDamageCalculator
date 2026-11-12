@@ -112,7 +112,7 @@ export function realtimeTimeline(
   const now =
     index < 0 ? 0 : index === ordered.length ? endTime(p) : ordered[index].time;
   const entries = effectCatalog(p).filter(
-    (e) => !e.automatic && !!e.effect.realtime,
+    (e) => e.effect.enabled !== false && !e.automatic && !!e.effect.realtime,
   );
   if (!entries.length)
     return {
@@ -390,7 +390,11 @@ export function realtimeTimeline(
     } else if (event.kind === "skill") {
       if (event.repeat) return;
       for (const entry of skillBoundEffects(p, event.skillId)) {
-        if (!definitions.has(entry.key)) continue;
+        if (
+          !definitions.has(entry.key) ||
+          event.disabledEffectKeys?.includes(entry.key)
+        )
+          continue;
         const own = entry.kind === "skill" && entry.ownerId === event.skillId;
         const t =
           event.effectTimings?.[entry.key] ??

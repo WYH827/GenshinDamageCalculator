@@ -236,25 +236,25 @@ test("equipment uses a single character editor and talents use grouped expandabl
       `${tab}第二位`,
     );
   }
-  await nav(page, "天赋");
+  await nav(page, "天赋/命座");
   for (const name of ["天赋甲", "天赋乙"]) {
-    await page.getByRole("button", { name: "添加天赋", exact: true }).click();
-    await page.getByLabel("天赋名称", { exact: true }).fill(name);
+    await page.getByRole("button", { name: "添加天赋/命座", exact: true }).click();
+    await page.getByLabel("天赋/命座名称", { exact: true }).fill(name);
     await page.getByRole("button", { name: "完成编辑", exact: true }).click();
   }
   await expect(page.locator(".talent-group")).toHaveCount(1);
   await expect(page.locator(".talent-panel .panel-body")).toHaveCount(0);
   await page
-    .getByRole("button", { name: "编辑天赋 天赋乙", exact: true })
+    .getByRole("button", { name: "编辑天赋/命座 天赋乙", exact: true })
     .click();
-  await expect(page.getByLabel("天赋名称", { exact: true })).toHaveValue(
+  await expect(page.getByLabel("天赋/命座名称", { exact: true })).toHaveValue(
     "天赋乙",
   );
   await page.getByRole("button", { name: "完成编辑", exact: true }).click();
   await page
     .locator(".talent-panel")
     .nth(1)
-    .getByRole("button", { name: "天赋上移", exact: true })
+    .getByRole("button", { name: "天赋/命座上移", exact: true })
     .click();
   await expect(
     page.locator(".talent-panel .skill-label").first(),

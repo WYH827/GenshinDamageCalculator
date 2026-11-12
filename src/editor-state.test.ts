@@ -101,9 +101,12 @@ describe("main stats, ignored stats, and imports", () => {
       "hpPercent",
       "defPercent",
       "mastery",
+      "recharge",
       "notImportant",
     ]);
-    const common = SANDS_STATS.filter((s) => s !== "notImportant");
+    const common = SANDS_STATS.filter(
+      (s) => s !== "notImportant" && s !== "recharge",
+    );
     expect(CIRCLET_STATS).toEqual([
       ...common,
       "critRate",

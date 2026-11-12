@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { Field, Modal, Num } from "./components";
 import ScheduleEditor from "./ScheduleEditor";
@@ -13,7 +14,9 @@ export default function TimelineBatchControls({
   onSelecting,
   adding,
   onAdding,
+  actions,
 }: {
+  actions: ReactNode;
   project: Project;
   update: Update;
   selected: Set<string>;
@@ -61,6 +64,7 @@ export default function TimelineBatchControls({
       <div
         className={`timeline-batch-toolbar ${selecting ? "is-selecting" : "is-idle"}`}
       >
+        {!selecting && actions}
         <button
           className={`btn ${selecting ? "primary" : ""}`}
           onClick={() => {

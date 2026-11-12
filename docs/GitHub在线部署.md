@@ -33,20 +33,26 @@ npm run deploy:cloudflare
 
 GitHub仓库仍用于源码、预设PR与版本管理，现有Pages不会被关闭。若以后改用新域名，浏览器数据不会自动迁移，请在原站导出JSON，再到新站导入。
 
-## GitHub Pages 的 UID 查询（默认，无需额外部署）
+## GitHub Pages 的 UID 查询
 
-GitHub Pages直接向 `https://r.jina.ai/https://enka.network/api/uid/{uid}/` 请求JSON，无需API Key或迁移网站。请求使用 `Accept: application/json`、`X-Engine: curl`、`X-Cache-Tolerance: 60`，仅从返回的 `data.content` 解析原始JSON，不做文本提取或数值推断。校验来源URL和返回UID，拒绝HTML、截断文本及错误响应。客户端尊重Enka TTL与限流的Retry-After。
+本站现已配置作者的Cloudflare转发：`https://teyvat-enka-api.teyvat-damage-studio.workers.dev`，通过仓库变量 `VITE_ENKA_API_BASE` 使用；Pages域名不变。接口实测允许 `https://wyh827.github.io` 跨域读取。部分网络无法直接连接workers.dev，需要可达该域名的网络或后续绑定自有域名。下方匿名公共服务仅为未配置自有接口时的后备路径。
+
+2026-11-12复核：Jina可能返回401（匿名IP信誉限制），不能保证免账号自动查询的可用性。工作台在失败后展开“从Enka官方读取并粘贴JSON”：打开当前UID的官方接口、复制完整JSON并粘贴预览，保持原有单角色/四角色选择，不下载文件。浏览器已实测官方API缺少 `Access-Control-Allow-Origin`，所以Pages脚本无法直接读取；`no-cors`不能解决。
+
+未配置自有接口时，GitHub Pages尝试向 `https://r.jina.ai/https://enka.network/api/uid/{uid}/` 请求JSON，无需API Key或迁移网站。请求使用 `Accept: application/json`、`X-Engine: curl`、`X-Cache-Tolerance: 60`，仅从返回的 `data.content` 解析原始JSON，不做文本提取或数值推断。校验来源URL和返回UID，拒绝HTML、截断文本及错误响应。客户端尊重Enka TTL与限流的Retry-After。
 
 已核对 starrailoptimizer.github.io 的部署JS：其前端调用AWS `/prod/profile/{uid}` 接口，因此Pages页面可以通过支持CORS的外部服务完成UID查询；本项目使用支持原神数据的Jina Reader公开接口。参考 [Reader官方说明](https://github.com/jina-ai/reader#json-mode)。
 
 若要改用自有服务，可部署 `deploy/enka-worker.ts`：
 
-1. 使用自己的 Cloudflare 账号，在项目根目录运行 `npx wrangler deploy --config deploy/wrangler.toml`（首次使用会要求登录）。此命令会发布服务，留到实际发布时执行。
+1. 注册Cloudflare并在项目目录运行 `npx wrangler login` 完成浏览器授权，再运行 `npx wrangler deploy --config deploy/wrangler.toml`。这只发布接口，不迁移GitHub Pages网页。
 2. `ALLOWED_ORIGIN` 默认只允许 `https://wyh827.github.io`。换自定义域名时一并更新。
 3. 获取生成的 Worker 地址，在 GitHub 仓库 Settings → Secrets and variables → Actions → Variables 添加 `VITE_ENKA_API_BASE`，值为服务根地址，如 `https://teyvat-enka-api.<子域>.workers.dev`，不要附 `/api/enka`。
 4. 重新运行 Pages workflow。代码不会包含密码或令牌；客户端只需要公开的接口地址。
 
 转发服务只接受规定路径的UID查询，保留Enka缓存TTL、请求合并、429退避和超时控制。UID会发送给该服务和Enka，用于读取公开展柜。生产公开服务可按访问量配置平台限流。
+
+截至2026-11-12，Workers Free免费额度为账户每天100,000次请求、每次10ms CPU，超过日额度返回1027，不自动升级。CPU时间不包括等待Enka网络响应。付费计划需主动开通，最低5美元/月。此接口不使用数据库、KV或付费域名。参考 [官方定价](https://developers.cloudflare.com/workers/platform/pricing/) 与 [额度说明](https://developers.cloudflare.com/workers/platform/limits/)。
 
 ## 本地与其他托管
 

@@ -28,10 +28,17 @@ export default function TimelineEventGroup({
         `${Math.max(0, child.top - time.bottom + 1)}px`,
       );
     };
-    const observer = new ResizeObserver(measure);
+    let frame = 0;
+    const observer = new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    });
     observer.observe(group);
     measure();
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
   }, []);
   return (
     <div ref={ref} className={className}>

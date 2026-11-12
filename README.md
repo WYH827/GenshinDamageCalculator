@@ -61,9 +61,9 @@ Windows也可运行 `启动工作台.cmd`。`npm run test:e2e` 使用Windows Mic
 
 GitHub Actions在主分支更新后自动校验预设、测试、构建和发布Pages。部署说明见 [GitHub在线部署](docs/GitHub在线部署.md)。
 
-**在线版可直接输入UID使用Enka，无需自行部署服务。** GitHub Pages版通过 [Jina Reader](https://jina.ai/reader/) 公开接口读取Enka原始JSON，不需要API Key、Cloudflare账号或自行部署后端。UID会发送给Jina与Enka。客户端校验来源地址和UID，原样解析数值，按Enka TTL缓存；Reader缓存容忍时间设为60秒。遇到限流遵守Retry-After，不连续重试。
+**在线版可直接输入UID使用Enka，无需登录或自行部署服务。** 网页继续托管在GitHub Pages，通过作者的 [Cloudflare转发接口](https://enka-api.wyh827.workers.dev/) 读取Enka官方数据，不再依赖Jina Reader。UID会发送给该接口与Enka，仅读取公开展柜；转发按Enka TTL缓存并合并重复请求，遇到限流会退避。自动读取失败时，可在导入窗口打开对应UID的Enka官方JSON，复制粘贴后预览导入。部分网络无法直接访问workers.dev时，需要切换到可访问该域名的网络。
 
-也可部署项目提供的 `deploy/enka-worker.ts`，把地址设为仓库变量 `VITE_ENKA_API_BASE`；配置后优先使用自有服务。本地dev/preview继续使用内置转发接口。
+当前仓库变量 `VITE_ENKA_API_BASE` 为 `https://enka-api.wyh827.workers.dev`。自行部署时可使用 `deploy/enka-worker.ts` 并配置自己的接口地址；本地dev/preview继续使用内置转发接口。
 
 
 ## 公式与许可

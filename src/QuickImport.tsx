@@ -247,7 +247,7 @@ export default function QuickImport({
             >
               Enka.Network
             </a>{" "}
-            仅返回公开展柜角色，请在游戏中开启“显示角色详情”。数据受接口缓存影响。
+            仅返回公开展柜角色，请在游戏中开启“显示角色详情”。数据受接口缓存影响。在线版通过Cloudflare转发Enka请求，无需登录。
           </p>
           {usesPublicEnkaRelay() && (
             <p className="input-note">
@@ -269,7 +269,7 @@ export default function QuickImport({
                 setOfficialOpen(!officialOpen);
               }}
             >
-              从Enka官方读取并粘贴JSON（免账号）
+              从Enka官方读取并粘贴JSON（自动读取失败时可选）
             </summary>
             <p className="input-note">
               先输入UID，打开官方接口；在新页面按Ctrl+A、Ctrl+C，回到这里粘贴，再点击预览。此方式直接访问Enka，不经过公共转发，也不需要下载文件。

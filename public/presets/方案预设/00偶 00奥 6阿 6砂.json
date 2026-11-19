@@ -1,0 +1,1891 @@
+{
+  "version": 1,
+  "starStackVersion": 2,
+  "name": "00偶 00奥 6阿 6砂",
+  "characters": [
+    {
+      "avatarUrl": "https://enka.network/ui/UI_AvatarIcon_Side_MarionetteNew.png",
+      "id": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+      "name": "桑多涅",
+      "short": "偶",
+      "constellation": "0",
+      "level": 90,
+      "gold": 1,
+      "limitedGold": 1,
+      "stars": 0,
+      "element": "冰",
+      "elementNeedsReview": false,
+      "hp": 13225.583984375,
+      "atk": 342.025113490625,
+      "def": 752.4147338867188,
+      "critRate": 5,
+      "critDamage": 50,
+      "mastery": 0,
+      "bonus": 0,
+      "physicalBonus": 0,
+      "ascension": {
+        "type": "critRate",
+        "value": 19.2
+      },
+      "legacyAscension": []
+    },
+    {
+      "avatarUrl": "https://enka.network/ui/UI_AvatarIcon_Side_Odette.png",
+      "id": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+      "name": "奥黛塔",
+      "short": "奥",
+      "constellation": "0",
+      "level": 90,
+      "gold": 1,
+      "limitedGold": 1,
+      "stars": 0,
+      "element": "冰",
+      "elementNeedsReview": false,
+      "hp": 12980.666015625,
+      "atk": 334.8497802414063,
+      "def": 786.9996948242188,
+      "critRate": 5,
+      "critDamage": 50,
+      "mastery": 0,
+      "bonus": 0,
+      "physicalBonus": 0,
+      "ascension": {
+        "type": "critDamage",
+        "value": 38.4
+      },
+      "legacyAscension": []
+    },
+    {
+      "avatarUrl": "https://enka.network/ui/UI_AvatarIcon_Side_Alyosha.png",
+      "id": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+      "name": "阿罗夏",
+      "short": "阿",
+      "constellation": "6",
+      "level": 90,
+      "gold": 0,
+      "limitedGold": 0,
+      "stars": 0,
+      "element": "雷",
+      "elementNeedsReview": false,
+      "hp": 11962,
+      "atk": 265,
+      "def": 703,
+      "critRate": 5,
+      "critDamage": 50,
+      "mastery": 0,
+      "bonus": 0,
+      "physicalBonus": 0,
+      "ascension": {
+        "type": "critRate",
+        "value": 0
+      },
+      "legacyAscension": []
+    },
+    {
+      "avatarUrl": "https://enka.network/ui/UI_AvatarIcon_Side_Sucrose.png",
+      "id": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+      "name": "砂糖",
+      "short": "砂",
+      "constellation": "6",
+      "level": 90,
+      "gold": 0,
+      "limitedGold": 0,
+      "stars": 0,
+      "element": "风",
+      "elementNeedsReview": false,
+      "hp": 0,
+      "atk": 0,
+      "def": 0,
+      "critRate": 5,
+      "critDamage": 50,
+      "mastery": 0,
+      "bonus": 0,
+      "physicalBonus": 0,
+      "ascension": {
+        "type": "critRate",
+        "value": 0
+      },
+      "legacyAscension": []
+    }
+  ],
+  "initialCharacterId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+  "weapons": [
+    {
+      "iconUrl": "https://enka.network/ui/UI_EquipIcon_Claymore_Champion.png",
+      "id": "d12f3dad-67ac-416f-b207-b288d09f021b",
+      "name": "「究极霸王超级魔剑」",
+      "short": "0极霸剑",
+      "gold": 0,
+      "limitedGold": 0,
+      "characterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+      "atk": 564.7837244,
+      "substats": [
+        {
+          "id": "fddd7abd-df53-47c7-8a1b-f2902da00867",
+          "type": "recharge",
+          "mode": "direct",
+          "value": 30.626819800000003
+        }
+      ],
+      "effects": [
+        {
+          "id": "3aec22fc-31ad-4106-8000-4c882e74748b",
+          "name": "极霸剑被动",
+          "sourceId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "攻击力",
+          "multiplierMode": "unconfirmed",
+          "valueMode": "number",
+          "value": 24,
+          "unit": "percent",
+          "variableCharacterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": true,
+          "category": "global",
+          "outsideActive": true,
+          "coefficient": 1,
+          "duration": null,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        },
+        {
+          "id": "81de2931-98ab-46a1-aab8-ae44e0967adc",
+          "name": "桑多涅武器极霸剑2",
+          "nameMode": "custom",
+          "sourceId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "攻击力",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 24,
+          "unit": "percent",
+          "variableCharacterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": true,
+          "category": "global",
+          "outsideActive": false,
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "iconUrl": "https://enka.network/ui/UI_EquipIcon_Sword_WeaponQuestSnezhnaya.png",
+      "id": "1e2cea6a-4885-4c65-a2d2-a4cb05fc1bf6",
+      "name": "星锋剑",
+      "short": "0星锋剑",
+      "gold": 0,
+      "limitedGold": 0,
+      "characterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+      "atk": 608.0745972,
+      "substats": [
+        {
+          "id": "1e5c32cf-8f8b-463b-bf34-baa22076d196",
+          "type": "critRate",
+          "mode": "direct",
+          "value": 33.0768
+        }
+      ],
+      "effects": []
+    },
+    {
+      "id": "31c11eb7-93db-4195-834a-109ba3660cec",
+      "name": "",
+      "short": "",
+      "gold": 0,
+      "limitedGold": 0,
+      "characterId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+      "atk": 0,
+      "substats": [],
+      "effects": []
+    },
+    {
+      "id": "77a077e9-fc94-4294-ab54-26686a7ad324",
+      "name": "讨龙",
+      "short": "讨龙",
+      "gold": 0,
+      "limitedGold": 0,
+      "characterId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+      "atk": 0,
+      "substats": [],
+      "effects": [
+        {
+          "id": "725e5fc3-20c1-42ab-ba44-c96d619486ae",
+          "name": "砂糖武器讨龙",
+          "nameMode": "auto",
+          "sourceId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+          "target": "custom",
+          "targetIds": [
+            "34daabd1-030d-45dd-89f7-f4ba16b2476f"
+          ],
+          "targetElements": [],
+          "type": "攻击力",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 48,
+          "unit": "percent",
+          "variableCharacterId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": false,
+          "outsideActive": false,
+          "realtime": {
+            "activeFor": null,
+            "kind": "fixed",
+            "max": 5,
+            "initial": 0,
+            "duration": 10,
+            "interval": 1,
+            "delta": 1
+          },
+          "boundSkillIds": [],
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "iconUrls": [
+        "https://enka.network/ui/UI_RelicIcon_15046_4.png"
+      ],
+      "id": "cb03ea28-c246-49b0-a4fe-0d67ca40f58b",
+      "name": "影中沉凝的幻灭（4件套）",
+      "characterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+      "substats": [
+        {
+          "id": "2330533a-f19a-4e8f-8044-104c44bb7ee6",
+          "type": "critDamage",
+          "mode": "direct",
+          "value": 79.27
+        },
+        {
+          "id": "af23a737-d871-4d20-8300-651aabb2bcab",
+          "type": "critRate",
+          "mode": "direct",
+          "value": 45.879999999999995
+        },
+        {
+          "id": "31a703ae-d891-454d-9fd6-eb1f65e781a4",
+          "type": "mastery",
+          "mode": "direct",
+          "value": 102.57
+        },
+        {
+          "id": "a447c395-3a60-473f-a900-b7792208647d",
+          "type": "def",
+          "mode": "direct",
+          "value": 64.81
+        },
+        {
+          "id": "f4ba5459-d704-4658-8a4b-52d41950b39e",
+          "type": "recharge",
+          "mode": "direct",
+          "value": 5.83
+        },
+        {
+          "id": "9c7536b5-836c-48a2-b3c0-e5882e4f2e05",
+          "type": "atk",
+          "mode": "direct",
+          "value": 52.519999999999996
+        },
+        {
+          "id": "c9580bcf-c9cb-415f-8d5f-94826bbd7ec8",
+          "type": "atkPercent",
+          "mode": "direct",
+          "value": 14.57
+        },
+        {
+          "id": "e027ab33-5270-4ade-8160-b82e0815bb9b",
+          "type": "hpPercent",
+          "mode": "direct",
+          "value": 4.08
+        }
+      ],
+      "mainStats": {
+        "flower": "hp",
+        "feather": "atk",
+        "sands": "atkPercent",
+        "goblet": "atkPercent",
+        "circlet": "critDamage"
+      },
+      "mainStat20": {
+        "flower": true,
+        "feather": true,
+        "sands": true,
+        "goblet": true,
+        "circlet": true
+      },
+      "mainStatValues": {
+        "flower": 4780,
+        "feather": 311,
+        "sands": 46.6,
+        "goblet": 46.6,
+        "circlet": 62.2
+      },
+      "effects": [
+        {
+          "id": "964cc54a-d6dd-48a6-ab26-ab60e975930b",
+          "name": "2件套",
+          "sourceId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "攻击力",
+          "multiplierMode": "unconfirmed",
+          "valueMode": "number",
+          "value": 18,
+          "unit": "percent",
+          "variableCharacterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "timingPreset": {
+            "count": 1,
+            "duration": null,
+            "limit": "none",
+            "max": 5,
+            "interval": 1,
+            "delta": 1
+          },
+          "formulas": [],
+          "global": true,
+          "outsideActive": true,
+          "coefficient": 1,
+          "duration": null,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        },
+        {
+          "id": "dbb1e4e6-dfb5-4f4b-a027-f34cde91712d",
+          "name": "4件套1",
+          "sourceId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "星月增伤",
+          "multiplierMode": "unconfirmed",
+          "valueMode": "number",
+          "value": 40,
+          "unit": "percent",
+          "variableCharacterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": true,
+          "outsideActive": false,
+          "coefficient": 1,
+          "duration": null,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": "星超导"
+          }
+        },
+        {
+          "id": "b35f76bd-5d2d-4d52-9a97-d0aad56d6692",
+          "name": "4件套2",
+          "sourceId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "暴击率",
+          "multiplierMode": "unconfirmed",
+          "valueMode": "number",
+          "value": 16,
+          "unit": "percent",
+          "variableCharacterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": true,
+          "outsideActive": false,
+          "coefficient": 1,
+          "duration": null,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "iconUrls": [
+        "https://enka.network/ui/UI_RelicIcon_15048_4.png"
+      ],
+      "id": "83d82166-95ae-4f76-8c28-f46497e83afc",
+      "name": "炉火融炼之心（4件套）",
+      "characterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+      "substats": [
+        {
+          "id": "ae5662bd-9fd1-4ce2-851c-f72ad8a5e164",
+          "type": "critRate",
+          "mode": "direct",
+          "value": 39.65
+        },
+        {
+          "id": "71198f5d-7029-4cf3-a44b-639f4e52f6b6",
+          "type": "defPercent",
+          "mode": "direct",
+          "value": 17.490000000000002
+        },
+        {
+          "id": "ab5c6bad-9594-40ee-aaac-bba98212a4bb",
+          "type": "critDamage",
+          "mode": "direct",
+          "value": 60.61
+        },
+        {
+          "id": "55bbd6ba-2516-4318-8d97-29d18e892752",
+          "type": "recharge",
+          "mode": "direct",
+          "value": 34.33
+        },
+        {
+          "id": "5553d0f2-e1ab-4fd2-911a-b9a96003eea4",
+          "type": "atkPercent",
+          "mode": "direct",
+          "value": 18.65
+        },
+        {
+          "id": "1b410c82-8483-4e7d-b35c-10dc4ca39967",
+          "type": "hp",
+          "mode": "direct",
+          "value": 746.89
+        },
+        {
+          "id": "663d8102-2265-4904-b285-f152bf81b68f",
+          "type": "mastery",
+          "mode": "direct",
+          "value": 16.32
+        },
+        {
+          "id": "d9a49a5d-7ec8-4fb8-9c1a-363aeb61ad11",
+          "type": "atk",
+          "mode": "direct",
+          "value": 33.07
+        }
+      ],
+      "mainStats": {
+        "flower": "hp",
+        "feather": "atk",
+        "sands": "atkPercent",
+        "goblet": "atkPercent",
+        "circlet": "critDamage"
+      },
+      "mainStat20": {
+        "flower": true,
+        "feather": true,
+        "sands": true,
+        "goblet": true,
+        "circlet": true
+      },
+      "mainStatValues": {
+        "flower": 4780,
+        "feather": 311,
+        "sands": 46.6,
+        "goblet": 46.6,
+        "circlet": 62.2
+      },
+      "effects": [
+        {
+          "id": "6789be6c-41e4-481e-a85d-7f0bf482fd7b",
+          "name": "奥黛塔圣遗物炉火（4自）",
+          "nameMode": "custom",
+          "sourceId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "攻击力",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 12,
+          "unit": "percent",
+          "variableCharacterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": true,
+          "category": "global",
+          "outsideActive": false,
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        },
+        {
+          "id": "84e03673-a0c7-46f2-90f5-afe035379b1a",
+          "name": "奥黛塔圣遗物炉火（4队）",
+          "nameMode": "custom",
+          "sourceId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "target": "team",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "星月增伤",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 50,
+          "unit": "percent",
+          "variableCharacterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "timingPreset": {
+            "count": 1,
+            "duration": 10,
+            "limit": "none",
+            "max": 5,
+            "interval": 1,
+            "delta": 1
+          },
+          "formulas": [],
+          "global": true,
+          "category": "global",
+          "outsideActive": false,
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        },
+        {
+          "id": "75b6c06c-d096-4050-9dd1-9848315d598e",
+          "name": "奥黛塔圣遗物炉火（2自）",
+          "nameMode": "custom",
+          "sourceId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "攻击力",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 18,
+          "unit": "percent",
+          "variableCharacterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": true,
+          "category": "global",
+          "outsideActive": true,
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "077cbcd9-8e69-41a0-8af6-7de7783daa5e",
+      "name": "宗室",
+      "characterId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+      "substats": [],
+      "mainStats": {
+        "flower": "hp",
+        "feather": "atk",
+        "sands": "notImportant",
+        "goblet": "notImportant",
+        "circlet": "notImportant"
+      },
+      "effects": [
+        {
+          "id": "fbdd4416-c7b7-4ecc-8e9f-7ee44b82ec01",
+          "name": "阿罗夏圣遗物宗室",
+          "nameMode": "auto",
+          "sourceId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+          "target": "team",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "攻击力",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 20,
+          "unit": "percent",
+          "variableCharacterId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "timingPreset": {
+            "count": 1,
+            "duration": 12,
+            "limit": "none",
+            "max": 5,
+            "interval": 1,
+            "delta": 1
+          },
+          "formulas": [],
+          "global": false,
+          "outsideActive": false,
+          "realtime": {
+            "activeFor": null,
+            "kind": "fixed",
+            "max": 5,
+            "initial": 0,
+            "duration": 12,
+            "interval": 1,
+            "delta": 1
+          },
+          "boundSkillIds": [
+            "f7d7d277-927d-497c-82a5-1d9d9c59ac01"
+          ],
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "cacb39b1-5291-47c7-88b9-c26f31d98356",
+      "name": "风套",
+      "characterId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+      "substats": [
+        {
+          "id": "a916ad75-c292-4795-9904-e59b2662251c",
+          "type": "mastery",
+          "mode": "direct",
+          "value": 82
+        }
+      ],
+      "mainStats": {
+        "flower": "hp",
+        "feather": "atk",
+        "sands": "mastery",
+        "goblet": "mastery",
+        "circlet": "mastery"
+      },
+      "effects": [
+        {
+          "id": "744ae9a9-25f7-48ea-97bc-5c162303c911",
+          "name": "砂糖圣遗物风套",
+          "nameMode": "custom",
+          "sourceId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+          "target": "team",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "敌方抗性",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": -40,
+          "unit": "percent",
+          "variableCharacterId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": false,
+          "outsideActive": false,
+          "realtime": {
+            "activeFor": null,
+            "kind": "fixed",
+            "max": 5,
+            "initial": 0,
+            "duration": 10,
+            "interval": 1,
+            "delta": 1
+          },
+          "boundSkillIds": [
+            "2c55fa77-1485-4e1f-9bfb-8bd61a76a8b0"
+          ],
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "1730f385-a6f3-4ebf-88c9-d73126074e3d",
+      "name": "木偶10级Z",
+      "characterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+      "kind": "damage",
+      "multiplier": 161.5,
+      "scalingMode": "live",
+      "damage": {
+        "element": "冰",
+        "attack": "重击",
+        "scaling": "攻击力",
+        "special": "星超导"
+      },
+      "effects": []
+    },
+    {
+      "id": "ade64f69-47a9-43f1-a9d6-4cb271e6832e",
+      "name": "木偶10级Q",
+      "characterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+      "kind": "damage",
+      "multiplier": 396.96,
+      "scalingMode": "live",
+      "damage": {
+        "element": "冰",
+        "attack": "大招",
+        "scaling": "攻击力",
+        "special": "星超导"
+      },
+      "effects": []
+    },
+    {
+      "id": "efa254ed-70ab-4750-8976-727022e67a91",
+      "name": "奥黛塔9级E",
+      "characterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+      "kind": "damage",
+      "multiplier": 519.79,
+      "scalingMode": "live",
+      "damage": {
+        "element": "冰",
+        "attack": "战技",
+        "scaling": "攻击力",
+        "special": "星超导"
+      },
+      "effects": []
+    },
+    {
+      "id": "e95512ba-9b45-46e1-a82b-bc549ea51267",
+      "name": "木偶E",
+      "characterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+      "kind": "damage",
+      "multiplier": 38.88,
+      "scalingMode": "live",
+      "damage": {
+        "element": "冰",
+        "attack": "战技",
+        "scaling": "攻击力",
+        "special": "星超导"
+      },
+      "effects": []
+    },
+    {
+      "id": "50aea24a-6bd9-4422-bc39-2536ae86a43a",
+      "name": "阿罗夏E",
+      "characterId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+      "kind": "effect",
+      "multiplier": 100,
+      "scalingMode": "live",
+      "damage": {
+        "element": "火",
+        "attack": "战技",
+        "scaling": "攻击力",
+        "special": ""
+      },
+      "effects": [
+        {
+          "id": "9f2112bc-ed44-4230-9d6d-337a48f0cd3e",
+          "name": "阿罗夏E加攻击",
+          "nameMode": "custom",
+          "sourceId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+          "target": "foreground",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "攻击力",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 23.74,
+          "unit": "percent",
+          "variableCharacterId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "timingPreset": {
+            "mode": "independent",
+            "count": 1,
+            "duration": null,
+            "limit": "capped",
+            "max": 2,
+            "interval": 1,
+            "delta": 1
+          },
+          "formulas": [],
+          "global": false,
+          "outsideActive": false,
+          "realtimeKind": "stacking",
+          "realtime": {
+            "activeFor": null,
+            "kind": "independent",
+            "max": 2,
+            "initial": 0,
+            "duration": null,
+            "interval": 1,
+            "delta": 1
+          },
+          "boundSkillIds": [
+            "50aea24a-6bd9-4422-bc39-2536ae86a43a"
+          ],
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "f7d7d277-927d-497c-82a5-1d9d9c59ac01",
+      "name": "阿罗夏Q",
+      "characterId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+      "kind": "empty",
+      "multiplier": 100,
+      "scalingMode": "live",
+      "damage": {
+        "element": "火",
+        "attack": "战技",
+        "scaling": "攻击力",
+        "special": ""
+      },
+      "effects": []
+    },
+    {
+      "id": "2c55fa77-1485-4e1f-9bfb-8bd61a76a8b0",
+      "name": "砂糖E",
+      "characterId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+      "kind": "empty",
+      "multiplier": 100,
+      "scalingMode": "live",
+      "damage": {
+        "element": "火",
+        "attack": "战技",
+        "scaling": "攻击力",
+        "special": ""
+      },
+      "effects": []
+    }
+  ],
+  "globals": [
+    {
+      "id": "afb05a34-8ab2-4cc5-a98a-7200e2fdae11",
+      "name": "双冰",
+      "sourceId": "",
+      "target": "elements",
+      "targetIds": [],
+      "targetElements": [
+        "冰"
+      ],
+      "type": "暴击率",
+      "multiplierMode": "unconfirmed",
+      "valueMode": "number",
+      "value": 15,
+      "unit": "percent",
+      "variableCharacterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+      "variableStat": "攻击力",
+      "advanced": false,
+      "formulas": [],
+      "global": false,
+      "category": "global",
+      "outsideActive": false,
+      "coefficient": 1,
+      "duration": null,
+      "damage": {
+        "element": "全部",
+        "attack": "全部",
+        "scaling": "全部",
+        "special": ""
+      }
+    }
+  ],
+  "customEffects": [],
+  "talents": [
+    {
+      "id": "a951e838-3cb5-42cc-9155-69d8be4a4a2a",
+      "name": "攻击转精通",
+      "characterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+      "effects": [
+        {
+          "id": "af8f4f70-d797-440d-ad77-1f7f6b628d3e",
+          "name": "桑多涅天赋/命座攻击转精通",
+          "nameMode": "auto",
+          "sourceId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "元素精通",
+          "multiplierMode": "add",
+          "valueMode": "outside",
+          "value": 0,
+          "unit": "flat",
+          "variableCharacterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "variableStat": "攻击力",
+          "advanced": true,
+          "formulaPreset": {
+            "threshold": 0,
+            "step": 100,
+            "change": 8,
+            "cap": 160,
+            "wholeSteps": true
+          },
+          "formulas": [
+            {
+              "id": "aa841fb0-604b-4b8d-88f9-82ed12f6d2c7",
+              "condition": "",
+              "formula": "min(floor(max(x - (0), 0) / 100) * 8, 160)"
+            }
+          ],
+          "global": true,
+          "outsideActive": true,
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "12d898e9-2943-4bf4-9294-a0d0ed94bc26",
+      "name": "E增伤",
+      "characterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+      "effects": [
+        {
+          "id": "089a7cdc-5be9-4721-960b-51f124c27f0c",
+          "name": "桑多涅天赋/命座E增伤",
+          "nameMode": "auto",
+          "sourceId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "独立乘区",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 4,
+          "unit": "flat",
+          "variableCharacterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": true,
+          "outsideActive": false,
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "战技",
+            "scaling": "全部",
+            "special": "星超导"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ab7d9633-127a-40e9-b502-9cd303002905",
+      "name": "自拐",
+      "characterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+      "effects": [
+        {
+          "id": "ebc423bd-495e-4cf5-a1e9-1046cc34797b",
+          "name": "奥黛塔天赋/命座自拐",
+          "nameMode": "auto",
+          "sourceId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "独立乘区",
+          "multiplierMode": "add",
+          "valueMode": "live",
+          "value": 1,
+          "unit": "flat",
+          "variableCharacterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "variableStat": "攻击力",
+          "advanced": true,
+          "formulaPreset": {
+            "threshold": 1000,
+            "step": 100,
+            "change": 1.5,
+            "cap": 30,
+            "wholeSteps": false
+          },
+          "stacks": {
+            "enabled": false,
+            "mode": "independent",
+            "limit": "capped",
+            "max": 5,
+            "initial": 1,
+            "duration": 10,
+            "interval": 1,
+            "delta": 1
+          },
+          "formulas": [
+            {
+              "id": "900eace2-54c8-42eb-ade9-ffb1a7757d12",
+              "condition": "",
+              "formula": "(min((max(x - (1000), 0) / 100) * 1.5, 30))*0.01+1"
+            }
+          ],
+          "global": true,
+          "outsideActive": false,
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "2743a1aa-619a-467b-8d12-718abaf0ceea",
+      "name": "华彩（自）",
+      "characterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+      "effects": [
+        {
+          "id": "af1cb909-393e-4c4a-948b-33bf0c008b59",
+          "name": "奥黛塔天赋/命座华彩（自）",
+          "nameMode": "auto",
+          "sourceId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "星月增伤",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 15,
+          "unit": "percent",
+          "variableCharacterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "stacks": {
+            "enabled": false,
+            "mode": "periodic",
+            "limit": "capped",
+            "max": 4,
+            "initial": 0,
+            "duration": null,
+            "interval": 1,
+            "delta": -1
+          },
+          "formulas": [],
+          "global": false,
+          "category": "realtime",
+          "outsideActive": false,
+          "realtimeKind": "stacking",
+          "realtime": {
+            "activeFor": 10,
+            "kind": "sharedPeriodic",
+            "max": 4,
+            "initial": 0,
+            "duration": 10,
+            "interval": 9999,
+            "delta": -1
+          },
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "ded26b22-33a1-4448-a0c7-f39a08ec9689",
+      "name": "华彩（队友）",
+      "characterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+      "effects": [
+        {
+          "id": "35680851-17d8-405f-ba7e-e36ab2834939",
+          "name": "奥黛塔天赋/命座华彩（队友）",
+          "nameMode": "auto",
+          "sourceId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "target": "custom",
+          "targetIds": [
+            "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+            "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+            "00552b19-703c-4f78-b56a-b3fa2c2b2f60"
+          ],
+          "targetElements": [],
+          "type": "星月增伤",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 15,
+          "unit": "percent",
+          "variableCharacterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "stacks": {
+            "enabled": true,
+            "mode": "periodic",
+            "limit": "capped",
+            "max": 4,
+            "initial": 0,
+            "duration": null,
+            "interval": 1,
+            "delta": 1
+          },
+          "timingPreset": {
+            "mode": "periodic",
+            "count": 0,
+            "duration": null,
+            "limit": "capped",
+            "max": 4,
+            "interval": 1,
+            "delta": 1
+          },
+          "formulas": [],
+          "global": false,
+          "outsideActive": false,
+          "realtimeKind": "stacking",
+          "realtime": {
+            "activeFor": null,
+            "kind": "sharedPeriodic",
+            "max": 4,
+            "initial": 0,
+            "duration": null,
+            "interval": 1,
+            "delta": 1
+          },
+          "boundSkillIds": [],
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "c00ca13d-ab7d-400a-bbbd-927b8a8a9f10",
+      "name": "14%基础增伤",
+      "characterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+      "effects": [
+        {
+          "id": "645dac1c-0725-4b68-a303-cc8585874ab9",
+          "name": "桑多涅天赋/命座14%基础增伤",
+          "nameMode": "auto",
+          "sourceId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "target": "team",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "星月基础提升",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 14,
+          "unit": "percent",
+          "variableCharacterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": true,
+          "outsideActive": false,
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": "星超导"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5622e8be-7501-46a6-b5e9-a77184e11ab6",
+      "name": "14%基础增伤",
+      "characterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+      "effects": [
+        {
+          "id": "46675361-5718-4eee-9f55-0cbd61ff8d9b",
+          "name": "奥黛塔天赋/命座14%基础增伤",
+          "nameMode": "auto",
+          "sourceId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "target": "team",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "星月基础提升",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 14,
+          "unit": "percent",
+          "variableCharacterId": "d54856ab-2480-4991-9ccb-4074d2a8a454",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": true,
+          "outsideActive": false,
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "01b4b148-6cc2-41c1-9ab6-784d91625176",
+      "name": "精通1",
+      "characterId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+      "effects": [
+        {
+          "id": "924b032c-be05-43d0-9f93-74c882eb1ad2",
+          "name": "砂糖20%精通（触发时快照）",
+          "nameMode": "custom",
+          "sourceId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+          "target": "custom",
+          "targetIds": [
+            "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+            "d54856ab-2480-4991-9ccb-4074d2a8a454",
+            "cf7253ce-f138-46e8-9da4-268f4f26c40b"
+          ],
+          "targetElements": [],
+          "type": "元素精通",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 148.3,
+          "unit": "flat",
+          "variableCharacterId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+          "variableStat": "元素精通",
+          "advanced": false,
+          "timingPreset": {
+            "count": 1,
+            "duration": 8,
+            "limit": "none",
+            "max": 5,
+            "interval": 1,
+            "delta": 1
+          },
+          "formulas": [],
+          "global": false,
+          "outsideActive": false,
+          "realtimeKind": "stacking",
+          "realtime": {
+            "activeFor": null,
+            "kind": "fixed",
+            "max": 5,
+            "initial": 0,
+            "duration": 8,
+            "interval": 1,
+            "delta": 1
+          },
+          "boundSkillIds": [
+            "2c55fa77-1485-4e1f-9bfb-8bd61a76a8b0"
+          ],
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "bbe66f93-d781-4799-bf5e-d9a12717298e",
+      "name": "精通2",
+      "characterId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+      "effects": [
+        {
+          "id": "aeb04102-3fd4-4c96-805e-ba19b7c37e3a",
+          "name": "砂糖天赋/命座精通2",
+          "nameMode": "auto",
+          "sourceId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+          "target": "custom",
+          "targetIds": [
+            "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+            "d54856ab-2480-4991-9ccb-4074d2a8a454",
+            "cf7253ce-f138-46e8-9da4-268f4f26c40b"
+          ],
+          "targetElements": [],
+          "type": "元素精通",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 50,
+          "unit": "flat",
+          "variableCharacterId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "timingPreset": {
+            "count": 1,
+            "duration": 8,
+            "limit": "none",
+            "max": 5,
+            "interval": 1,
+            "delta": 1
+          },
+          "formulas": [],
+          "global": false,
+          "outsideActive": false,
+          "realtime": {
+            "activeFor": null,
+            "kind": "fixed",
+            "max": 5,
+            "initial": 0,
+            "duration": 8,
+            "interval": 1,
+            "delta": 1
+          },
+          "boundSkillIds": [
+            "2c55fa77-1485-4e1f-9bfb-8bd61a76a8b0"
+          ],
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "7f46b870-c9a7-433d-b2fa-8fdf9d472248",
+      "name": "Q增伤",
+      "characterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+      "effects": [
+        {
+          "id": "9ab0ae8d-6f16-4703-95a5-a05ca697250e",
+          "name": "桑多涅天赋/命座Q增伤",
+          "nameMode": "auto",
+          "sourceId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "target": "self",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "独立乘区",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 2,
+          "unit": "flat",
+          "variableCharacterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": true,
+          "category": "global",
+          "outsideActive": false,
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "大招",
+            "scaling": "全部",
+            "special": "星超导"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4f58f248-720e-47a6-97e9-0c19a7c3cc8a",
+      "name": "增伤",
+      "characterId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+      "effects": [
+        {
+          "id": "a8caa4f9-bcc4-46eb-b28c-ff1882d1bbc8",
+          "name": "阿罗夏天赋/命座增伤",
+          "nameMode": "auto",
+          "sourceId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+          "target": "foreground",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "星月增伤",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 20,
+          "unit": "percent",
+          "variableCharacterId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "timingPreset": {
+            "mode": "independent",
+            "count": 1,
+            "duration": null,
+            "limit": "capped",
+            "max": 2,
+            "interval": 1,
+            "delta": 1
+          },
+          "formulas": [],
+          "global": false,
+          "outsideActive": false,
+          "realtimeKind": "stacking",
+          "realtime": {
+            "activeFor": null,
+            "kind": "independent",
+            "max": 2,
+            "initial": 0,
+            "duration": null,
+            "interval": 1,
+            "delta": 1
+          },
+          "boundSkillIds": [],
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "d96ca84e-9a1e-425d-99c3-e29031081992",
+      "name": "6命",
+      "characterId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+      "effects": [
+        {
+          "id": "18dd03a3-e943-4a39-8d52-55bc8f28dd4c",
+          "name": "阿罗夏天赋/命座6命",
+          "nameMode": "auto",
+          "sourceId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+          "target": "foreground",
+          "targetIds": [],
+          "targetElements": [],
+          "type": "元素精通",
+          "multiplierMode": "add",
+          "valueMode": "number",
+          "value": 100,
+          "unit": "flat",
+          "variableCharacterId": "cf7253ce-f138-46e8-9da4-268f4f26c40b",
+          "variableStat": "攻击力",
+          "advanced": false,
+          "formulas": [],
+          "global": false,
+          "outsideActive": false,
+          "realtimeKind": "stacking",
+          "realtime": {
+            "activeFor": null,
+            "kind": "fixed",
+            "max": 5,
+            "initial": 0,
+            "duration": 21,
+            "interval": 1,
+            "delta": 1
+          },
+          "boundSkillIds": [],
+          "coefficient": 1,
+          "duration": 10,
+          "damage": {
+            "element": "全部",
+            "attack": "全部",
+            "scaling": "全部",
+            "special": ""
+          }
+        }
+      ]
+    }
+  ],
+  "enemy": {
+    "level": 100,
+    "resistance": {
+      "火": 10,
+      "冰": 10,
+      "雷": 10,
+      "草": 10,
+      "岩": 10,
+      "风": 10,
+      "水": 10,
+      "物理": 10
+    }
+  },
+  "timeline": [
+    {
+      "id": "52a14299-1dad-43ea-969e-e44e065c5941",
+      "time": 0.69,
+      "kind": "skill",
+      "skillId": "50aea24a-6bd9-4422-bc39-2536ae86a43a",
+      "effectTimings": {
+        "9f2112bc-ed44-4230-9d6d-337a48f0cd3e": {
+          "mode": "independent",
+          "count": 1,
+          "duration": null,
+          "limit": "capped",
+          "max": 2,
+          "interval": 1,
+          "delta": 1
+        },
+        "skill-50aea24a-6bd9-4422-bc39-2536ae86a43a-9f2112bc-ed44-4230-9d6d-337a48f0cd3e": {
+          "activeFor": null,
+          "mode": "independent",
+          "count": 1,
+          "duration": null,
+          "limit": "capped",
+          "max": 2,
+          "interval": 1,
+          "delta": 1
+        }
+      },
+      "effectUsePresets": {
+        "9f2112bc-ed44-4230-9d6d-337a48f0cd3e": false
+      }
+    },
+    {
+      "id": "d5455815-cf6f-4901-8824-0db1e579b1ef",
+      "time": 1,
+      "kind": "skill",
+      "skillId": "f7d7d277-927d-497c-82a5-1d9d9c59ac01",
+      "effectTimings": {},
+      "effectUsePresets": {}
+    },
+    {
+      "id": "bb752f96-0cf4-4b20-a0bd-fd33bd3eda59",
+      "time": 3.69,
+      "kind": "skill",
+      "skillId": "efa254ed-70ab-4750-8976-727022e67a91",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 1
+    },
+    {
+      "id": "6e4f1da8-4680-4991-9b89-7d6b32504efd",
+      "time": 2,
+      "kind": "switch",
+      "characterId": "d54856ab-2480-4991-9ccb-4074d2a8a454"
+    },
+    {
+      "id": "263304ac-c69c-499f-a4a1-010e1aca7ddd",
+      "time": 3.8,
+      "kind": "switch",
+      "characterId": "00552b19-703c-4f78-b56a-b3fa2c2b2f60"
+    },
+    {
+      "id": "faa9160c-3b08-465f-a901-d204fe87bb5c",
+      "disabledEffectKeys": [
+        "talent-01b4b148-6cc2-41c1-9ab6-784d91625176-924b032c-be05-43d0-9f93-74c882eb1ad2"
+      ],
+      "time": 5.13,
+      "kind": "skill",
+      "skillId": "2c55fa77-1485-4e1f-9bfb-8bd61a76a8b0",
+      "effectTimings": {},
+      "effectUsePresets": {}
+    },
+    {
+      "id": "f27119a7-61ea-4ede-9bde-7c177402b960",
+      "time": 5.8,
+      "kind": "switch",
+      "characterId": "34daabd1-030d-45dd-89f7-f4ba16b2476f"
+    },
+    {
+      "id": "9fb1efa6-a7a4-4dae-8396-687458a2156a",
+      "time": 5.8,
+      "kind": "effectTrigger",
+      "effectKey": "weapon-77a077e9-fc94-4294-ab54-26686a7ad324-725e5fc3-20c1-42ab-ba44-c96d619486ae",
+      "timing": {
+        "activeFor": null,
+        "mode": "direct",
+        "count": 1,
+        "duration": 10,
+        "limit": "none",
+        "max": 5,
+        "interval": 1,
+        "delta": 1
+      },
+      "usePreset": true
+    },
+    {
+      "id": "7f9d2db4-802e-4e70-8080-e0e8375cc931",
+      "time": 3.8,
+      "kind": "effectTrigger",
+      "effectKey": "talent-ded26b22-33a1-4448-a0c7-f39a08ec9689-35680851-17d8-405f-ba7e-e36ab2834939",
+      "timing": {
+        "activeFor": 4,
+        "mode": "periodic",
+        "count": 0,
+        "duration": null,
+        "limit": "capped",
+        "max": 4,
+        "interval": 1,
+        "delta": 1
+      },
+      "usePreset": false
+    },
+    {
+      "id": "43d76d76-8794-4de4-887f-d46a49a90abe",
+      "time": 7.87,
+      "kind": "skill",
+      "skillId": "1730f385-a6f3-4ebf-88c9-d73126074e3d",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 6
+    },
+    {
+      "id": "77d792b9-5f56-4c0e-b832-f06cbf54d99a",
+      "time": 8.79,
+      "kind": "skill",
+      "skillId": "1730f385-a6f3-4ebf-88c9-d73126074e3d",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 6
+    },
+    {
+      "id": "71796b84-ded4-41bb-b3fd-0f8329ae61af",
+      "time": 9.69,
+      "kind": "skill",
+      "skillId": "1730f385-a6f3-4ebf-88c9-d73126074e3d",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 6
+    },
+    {
+      "id": "7bbc3b2d-a800-46b1-9a1d-59da36560882",
+      "time": 10.83,
+      "kind": "skill",
+      "skillId": "e95512ba-9b45-46e1-a82b-bc549ea51267",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 9
+    },
+    {
+      "id": "83877f45-8e70-417c-942c-b50d3c9d522b",
+      "time": 13.23,
+      "kind": "skill",
+      "skillId": "ade64f69-47a9-43f1-a9d6-4cb271e6832e",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 9
+    },
+    {
+      "id": "168f05a9-0dde-4fc6-98aa-87d4e49af2bc",
+      "time": 13.62,
+      "kind": "skill",
+      "skillId": "1730f385-a6f3-4ebf-88c9-d73126074e3d",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 9
+    },
+    {
+      "id": "cfefb6e7-7ce9-46ba-80cf-5ec9d7905841",
+      "time": 14.88,
+      "kind": "skill",
+      "skillId": "1730f385-a6f3-4ebf-88c9-d73126074e3d",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 8
+    },
+    {
+      "id": "32bbe819-b2c9-41df-9f1f-233975f50322",
+      "time": 15.84,
+      "kind": "skill",
+      "skillId": "1730f385-a6f3-4ebf-88c9-d73126074e3d",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 8
+    },
+    {
+      "id": "363640b4-efab-480c-ba84-f53dc1bd84f8",
+      "time": 17.13,
+      "kind": "skill",
+      "skillId": "e95512ba-9b45-46e1-a82b-bc549ea51267",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 8
+    },
+    {
+      "id": "ba4b95d4-e25d-4cc9-8687-60a98a1e7831",
+      "time": 18.21,
+      "kind": "skill",
+      "skillId": "1730f385-a6f3-4ebf-88c9-d73126074e3d",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 8
+    },
+    {
+      "id": "04380e2e-2311-4a74-91b5-4a9cc12a1a60",
+      "time": 20.22,
+      "kind": "skill",
+      "skillId": "1730f385-a6f3-4ebf-88c9-d73126074e3d",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 8
+    },
+    {
+      "id": "06f3bb2a-ef00-4b17-9368-55ead55e4325",
+      "time": 19.29,
+      "kind": "skill",
+      "skillId": "1730f385-a6f3-4ebf-88c9-d73126074e3d",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 8
+    },
+    {
+      "id": "961bac7c-448b-4568-8375-86549d70f9e2",
+      "time": 21.45,
+      "kind": "skill",
+      "skillId": "e95512ba-9b45-46e1-a82b-bc549ea51267",
+      "effectTimings": {},
+      "effectUsePresets": {},
+      "starStacks": 8
+    },
+    {
+      "id": "ebc1db3d-d000-450c-a553-9c9c52cc9591",
+      "time": 0.69,
+      "kind": "effectTrigger",
+      "effectKey": "talent-4f58f248-720e-47a6-97e9-0c19a7c3cc8a-a8caa4f9-bcc4-46eb-b28c-ff1882d1bbc8",
+      "timing": {
+        "mode": "independent",
+        "count": 1,
+        "duration": 21,
+        "limit": "capped",
+        "max": 2,
+        "interval": 1,
+        "delta": 1
+      },
+      "usePreset": false
+    },
+    {
+      "id": "228c827d-0ad4-49e6-b072-b1f7c96c6a9f",
+      "time": 3.7,
+      "kind": "effectTrigger",
+      "effectKey": "talent-4f58f248-720e-47a6-97e9-0c19a7c3cc8a-a8caa4f9-bcc4-46eb-b28c-ff1882d1bbc8",
+      "timing": {
+        "activeFor": null,
+        "mode": "independent",
+        "count": 1,
+        "duration": null,
+        "limit": "capped",
+        "max": 2,
+        "interval": 1,
+        "delta": 1
+      },
+      "usePreset": false
+    },
+    {
+      "id": "8cfc6f11-9584-40cc-a99d-3d69ed9a7571",
+      "time": 3.7,
+      "kind": "effectTrigger",
+      "effectKey": "skill-50aea24a-6bd9-4422-bc39-2536ae86a43a-9f2112bc-ed44-4230-9d6d-337a48f0cd3e",
+      "timing": {
+        "activeFor": null,
+        "mode": "independent",
+        "count": 1,
+        "duration": null,
+        "limit": "capped",
+        "max": 2,
+        "interval": 1,
+        "delta": 1
+      },
+      "usePreset": true
+    },
+    {
+      "id": "6feb5bbd-f1ba-460c-9253-8d362c8dd6f4",
+      "time": 2.9,
+      "kind": "effectTrigger",
+      "effectKey": "talent-2743a1aa-619a-467b-8d12-718abaf0ceea-af1cb909-393e-4c4a-948b-33bf0c008b59",
+      "timing": {
+        "activeFor": 10,
+        "mode": "periodic",
+        "count": 4,
+        "duration": 10,
+        "limit": "capped",
+        "max": 4,
+        "interval": 9999,
+        "delta": -1
+      },
+      "usePreset": true
+    },
+    {
+      "id": "c06849be-abb7-42a8-bc12-81175f5b0aa7",
+      "time": 3.8,
+      "kind": "effectTrigger",
+      "effectKey": "talent-2743a1aa-619a-467b-8d12-718abaf0ceea-af1cb909-393e-4c4a-948b-33bf0c008b59",
+      "timing": {
+        "activeFor": 4,
+        "mode": "periodic",
+        "count": 4,
+        "duration": null,
+        "limit": "capped",
+        "max": 4,
+        "interval": 1,
+        "delta": -1
+      },
+      "usePreset": false
+    },
+    {
+      "id": "5a3415d7-1640-4a85-a55e-54774bae914a",
+      "time": 3.7,
+      "kind": "effectTrigger",
+      "effectKey": "talent-d96ca84e-9a1e-425d-99c3-e29031081992-18dd03a3-e943-4a39-8d52-55bc8f28dd4c",
+      "timing": {
+        "activeFor": null,
+        "mode": "direct",
+        "count": 1,
+        "duration": 21,
+        "limit": "capped",
+        "max": 5,
+        "interval": 1,
+        "delta": 1
+      },
+      "usePreset": true
+    },
+    {
+      "id": "precision-sucrose-share-start",
+      "time": 5.3,
+      "kind": "effectTrigger",
+      "effectKey": "talent-01b4b148-6cc2-41c1-9ab6-784d91625176-924b032c-be05-43d0-9f93-74c882eb1ad2",
+      "timing": {
+        "activeFor": null,
+        "mode": "direct",
+        "count": 1,
+        "duration": 8,
+        "limit": "capped",
+        "max": 5,
+        "interval": 1,
+        "delta": 1
+      },
+      "usePreset": false
+    }
+  ]
+}

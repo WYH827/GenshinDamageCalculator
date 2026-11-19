@@ -576,6 +576,7 @@ export type TimelineEvent = (
       time: number;
       kind: "skill";
       skillId: string;
+      // Stable saved option ID; labels describe the previous-cycle energy.
       starStacks?: number;
       legacyStarCoefficient?: number;
       amplification?: AmplificationReaction;
@@ -990,8 +991,14 @@ export const STAR_SUPERCONDUCT_TABLE = [
 ] as const;
 export function starSuperconduct(stacks: number) {
   if (!Number.isInteger(stacks) || stacks < 1 || stacks > 13)
-    throw new Error("星超导层数必须为1～13的整数（上周期元素力+1）");
+    throw new Error("星超导选项无效，请选择新触发状态或上周期元素力1～12");
   return STAR_SUPERCONDUCT_TABLE[stacks - 1];
+}
+export function starSuperconductLabel(optionId: number): string {
+  const { energy } = starSuperconduct(optionId);
+  return energy === 0
+    ? "1层（新触发星超导，上周期元素力0）"
+    : `${energy}层（上周期元素力${energy}）`;
 }
 
 export type AmplificationReaction = "蒸发" | "融化";

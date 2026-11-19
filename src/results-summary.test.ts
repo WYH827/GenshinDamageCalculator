@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { effect, newProject, skill, starSuperconduct } from "./model";
+import {
+  effect,
+  newProject,
+  skill,
+  starSuperconduct,
+  starSuperconductLabel,
+} from "./model";
 import { parseProject } from "./storage";
 import { calculateProject } from "./damage-engine";
 import { summarizeDamage } from "./damage-summary";
@@ -114,8 +120,21 @@ describe("result display modes and shares", () => {
     expect(rows.filter((r) => r.stat.includes("伤害加成"))).toHaveLength(8);
   });
 });
-describe("one-based star layers and migration", () => {
-  it("maps layers 1/2/13 and rejects zero", () => {
+describe("stable star options, energy labels and migration", () => {
+  it("distinguishes the two first layers and labels all remaining layers by energy", () => {
+    expect(starSuperconductLabel(1)).toBe("1层（新触发星超导，上周期元素力0）");
+    expect(starSuperconductLabel(2)).toBe("1层（上周期元素力1）");
+    for (let energy = 2; energy <= 12; energy++)
+      expect(starSuperconductLabel(energy + 1)).toBe(
+        `${energy}层（上周期元素力${energy}）`,
+      );
+    expect(starSuperconduct(6)).toMatchObject({
+      energy: 5,
+      bonus: 33,
+      coefficient: 1.65,
+    });
+  });
+  it("maps stable options 1/2/13 to energy 0/1/12 and rejects invalid options", () => {
     expect(starSuperconduct(1)).toMatchObject({
       energy: 0,
       bonus: 20,
@@ -156,6 +175,6 @@ describe("one-based star layers and migration", () => {
     ]);
     expect(parseProject(JSON.parse(JSON.stringify(next)))).toEqual(next);
     if (next.timeline[0].kind === "skill") next.timeline[0].starStacks = 0;
-    expect(() => parseProject(next)).toThrow("1～13");
+    expect(() => parseProject(next)).toThrow("星超导选项无效");
   });
 });

@@ -129,7 +129,7 @@ test("display modes update totals, every hit and donut without recalculating, wh
   await expect(page.locator(".outside-panel-values")).toContainText("2,000");
 });
 
-test("star layers migrate once, only offer 1 to 13, and globals start folded", async ({
+test("star layers show two distinct first layers and energy 2 to 12, migrate once, and globals start folded", async ({
   page,
 }) => {
   const p = newProject();
@@ -160,10 +160,48 @@ test("star layers migrate once, only offer 1 to 13, and globals start folded", a
   await expect(layers).toHaveValue("1");
   await expect(layers.locator("option")).toHaveCount(13);
   await expect(layers.locator('option[value="0"]')).toHaveCount(0);
-  await expect(layers.locator("option").first()).toContainText("上周期元素力0");
+  await expect(layers.locator("option").first()).toContainText(
+    "1层（新触发星超导，上周期元素力0）",
+  );
+  await expect(layers.locator('option[value="2"]')).toContainText(
+    "1层（上周期元素力1）",
+  );
+  await expect(layers.locator('option[value="13"]')).toContainText(
+    "12层（上周期元素力12）",
+  );
+  expect(await layers.locator("option").allTextContents()).not.toEqual(
+    expect.arrayContaining([expect.stringContaining("13层")]),
+  );
   await expect(page.locator(".star-stacks small")).toContainText(
     "20% · 星超导系数 1",
   );
+  await nav(page, "计算结果");
+  await page.getByRole("button", { name: "开始计算", exact: true }).click();
+  await expect(page.locator(".calculation-status")).toContainText("已完成计算");
+  const freshDamage = Number(
+    (await page.getByTestId("total-damage").innerText()).replaceAll(",", ""),
+  );
+  await page.locator(".damage-event > summary").click();
+  await expect(page.locator(".factor-list")).toContainText(
+    "1层（新触发星超导，上周期元素力0）",
+  );
+  await nav(page, "时间轴");
+  await layers.selectOption("2");
+  await expect(page.locator(".star-stacks small")).toContainText(
+    "29% · 星超导系数 1.45",
+  );
+  await nav(page, "计算结果");
+  await page.getByRole("button", { name: "开始计算", exact: true }).click();
+  await expect(page.locator(".calculation-status")).toContainText("已完成计算");
+  const oneEnergyDamage = Number(
+    (await page.getByTestId("total-damage").innerText()).replaceAll(",", ""),
+  );
+  expect(oneEnergyDamage).toBeCloseTo(freshDamage * 1.45, 2);
+  await page.locator(".damage-event > summary").click();
+  await expect(page.locator(".factor-list")).toContainText(
+    "1层（上周期元素力1）",
+  );
+  await nav(page, "时间轴");
   await layers.selectOption("13");
   await expect(page.locator(".star-stacks small")).toContainText(
     "40% · 星超导系数 2",

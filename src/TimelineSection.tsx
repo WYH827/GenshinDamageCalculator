@@ -34,6 +34,7 @@ import {
   uid,
   STAR_SUPERCONDUCT_TABLE,
   starSuperconduct,
+  starSuperconductLabel,
   canAmplify,
   amplificationFor,
   amplificationBase,
@@ -709,7 +710,7 @@ export default function TimelineSection({
                         <div className="star-stacks">
                           <Field
                             label="星超导层数"
-                            hint="上周期元素力+1 · 仅本事件"
+                            hint="上周期元素力 · 新触发星超导单独选择 · 仅本事件"
                           >
                             <select
                               aria-label="本次星超导层数"
@@ -742,8 +743,7 @@ export default function TimelineSection({
                               )}
                               {STAR_SUPERCONDUCT_TABLE.map((t) => (
                                 <option key={t.stacks} value={t.stacks}>
-                                  {t.stacks}层（上周期元素力{t.energy}） ·
-                                  冰雷增伤
+                                  {starSuperconductLabel(t.stacks)} · 冰雷增伤
                                   {t.bonus}% · 系数
                                   {t.coefficient}
                                 </option>
@@ -803,9 +803,7 @@ export default function TimelineSection({
                         <button
                           className="icon-btn"
                           aria-label={`复制事件 ${title}`}
-                          onClick={() =>
-                            append(copyTimelineEvent(e))
-                          }
+                          onClick={() => append(copyTimelineEvent(e))}
                         >
                           <Copy size={14} />
                         </button>

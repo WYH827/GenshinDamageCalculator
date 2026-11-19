@@ -1,4 +1,4 @@
-import { fmt, VALUE_MODES } from "./model";
+import { fmt, starSuperconductLabel, VALUE_MODES } from "./model";
 import type { DamageResult } from "./damage-engine";
 
 export default function DamageCalculation({
@@ -33,10 +33,7 @@ export default function DamageCalculation({
     ...(b.starStacks === null
       ? []
       : [
-          [
-            "星超导层数 / 上周期元素力",
-            `${b.starStacks} 层 / ${b.starStacks - 1} 点`,
-          ],
+          ["星超导层数 / 上周期元素力", starSuperconductLabel(b.starStacks)],
           [
             "对应冰雷增伤 / 实际应用",
             `${fmt(b.starTableBonus)}% / ${fmt(b.starElementBonus)}%${b.family === "astral" ? "（星月直伤不使用普通元素增伤）" : ""}`,

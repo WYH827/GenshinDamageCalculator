@@ -633,7 +633,8 @@ export function parseProject(data: unknown): Project {
   for (const event of p.timeline) {
     if (event.kind !== "skill" || event.starStacks === undefined) continue;
     if (p.starStackVersion === 2) {
-      if (event.starStacks < 1) throw new Error("星超导层数必须为1～13的整数");
+      if (event.starStacks < 1)
+        throw new Error("星超导选项无效，请选择新触发状态或上周期元素力1～12");
     } else {
       if (event.starStacks > 12)
         throw new Error("旧方案上周期元素力必须为0～12的整数");

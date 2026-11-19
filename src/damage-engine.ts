@@ -177,7 +177,7 @@ export function evaluateDamage(
     // A damage tag selects the formula; the actual hit element selects resistance.
     if (event.legacyStarCoefficient !== undefined)
       throw new Error(
-        `旧星超导系数${event.legacyStarCoefficient}无法对应表内层数，请在时间轴选择1～13层`,
+        `旧星超导系数${event.legacyStarCoefficient}无法对应表内层数，请在时间轴选择新触发状态或上周期元素力1～12`,
       );
     const stars =
       event.starStacks === undefined

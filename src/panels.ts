@@ -1,6 +1,7 @@
 import {
   artifactMainStat,
   isConditionalCritEffect,
+  isIndependentEffect,
   MAIN_SLOTS,
   type MainStats,
   statValue,
@@ -160,10 +161,11 @@ export function createPanelResolver(p: Project, eventId: string) {
           ? undefined
           : resolve(e.variableCharacterId, e.variableStat, e.valueMode);
       const perStack = evaluateEffectValue(e, x ?? 0);
-      if (e.type === "独立乘区" && perStack < 0)
-        throw new Error("独立乘区系数不能为负数");
-      const value =
-        e.type === "独立乘区" ? perStack ** stacks : perStack * stacks;
+      if (isIndependentEffect(e.type) && perStack < 0)
+        throw new Error(`${e.type}系数不能为负数`);
+      const value = isIndependentEffect(e.type)
+        ? perStack ** stacks
+        : perStack * stacks;
       if (!Number.isFinite(value)) throw new Error("效果数值超出范围");
       return {
         value,

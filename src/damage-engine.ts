@@ -73,6 +73,8 @@ export type DamageBreakdown = {
   amplificationFactor: number;
   independentFactors: number[];
   independentFactor: number;
+  independentProFactors: number[];
+  independentProFactor: number;
 };
 export type DamageResult = {
   event: Extract<TimelineEvent, { kind: "skill" }>;
@@ -203,6 +205,7 @@ export function evaluateDamage(
     let critRateBonus = 0,
       critDamageBonus = 0;
     const independentFactors: number[] = [];
+    const independentProFactors: number[] = [];
     for (const row of resolver.active) {
       const e = row.effect,
         use: EffectUse = {
@@ -333,6 +336,9 @@ export function evaluateDamage(
         case "独立乘区":
           independentFactors.push(nonnegative(value, "独立乘区系数"));
           break;
+        case "独立乘区Pro":
+          independentProFactors.push(nonnegative(value, "独立乘区Pro系数"));
+          break;
       }
     }
     const scaling = nonnegative(
@@ -420,14 +426,22 @@ export function evaluateDamage(
     const independentFactor = finite(
       independentFactors.reduce((product, factor) => product * factor, 1),
     );
+    const independentProFactor = finite(
+      independentProFactors.reduce((product, factor) => product * factor, 1),
+    );
     const nonCrit = finite(
-      nonnegative(base + (special ? extra : baseAdd), "伤害基础值") *
+      // Original-damage multipliers affect the skill base, not additive damage
+      // from allies. Pro multipliers apply to the complete damage instead.
+      nonnegative(
+        base * independentFactor + (special ? extra : baseAdd),
+        "伤害基础值",
+      ) *
         (special ? 1 : normalBonus) *
         R *
         F *
         uplift *
         reactionFactor *
-        independentFactor,
+        independentProFactor,
     );
     result.nonCrit = nonCrit;
     result.crit = finite(nonCrit * (1 + critDamage / 100));
@@ -475,6 +489,8 @@ export function evaluateDamage(
       amplificationFactor: reactionFactor,
       independentFactors,
       independentFactor,
+      independentProFactors,
+      independentProFactor,
     };
   } catch (err) {
     result.error = (err as Error).message;

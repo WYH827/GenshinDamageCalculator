@@ -51,6 +51,7 @@ import {
   charName,
   effect,
   effectUnit,
+  isIndependentEffect,
   usesDirectVariableValue,
   type Character,
   type Damage,
@@ -670,13 +671,15 @@ export function EffectEditor({
                 type,
                 ...((PERCENT_EFFECTS as readonly string[]).includes(type)
                   ? { unit: "percent" as const }
-                  : ["基础值加成", "星月额外提升", "独立乘区"].includes(type)
+                  : ["基础值加成", "星月额外提升"].includes(type) ||
+                      isIndependentEffect(type)
                     ? { unit: "flat" as const }
                     : {}),
                 ...(type === "擢升" && value.type !== "擢升"
                   ? { value: 0 }
                   : {}),
-                ...(type === "独立乘区" && value.type !== "独立乘区"
+                ...(isIndependentEffect(type) &&
+                !isIndependentEffect(value.type)
                   ? { value: 1 }
                   : {}),
               });
@@ -823,19 +826,22 @@ export function EffectEditor({
         "擢升",
         "增伤区",
         "独立乘区",
+        "独立乘区Pro",
       ].includes(value.type) && (
         <p className="formula-note">
           {value.type === "基础值加成" || value.type === "星月额外提升"
-            ? "直接填写增加的伤害数值。常规直伤在基础增伤之前加算；星月直伤在基础提升、精通和专属增伤之后加算，再参与抗性、暴击、擢升和独立乘区。"
+            ? "直接填写增加的伤害数值。在独立乘区放大技能基础伤害后加算，再参与适用的增伤、抗性、防御、暴击、反应、擢升和独立乘区Pro。"
             : value.type === "独立乘区"
-              ? "直接填写系数，例如1.2表示最终伤害×1.2。多个独立乘区分别相乘；变层数效果每层乘一次（3层1.2为1.2³）。普通和星月直伤均适用。"
-              : value.type === "擢升"
-                ? "填写擢升百分数；所有生效且匹配的擢升相加。10% + 5% 对应最终系数 1 + 15% = 1.15。支持基础、局外、实时变量及条件公式。"
-                : value.type === "星月基础提升"
-                  ? "只放大星月直伤的属性×倍率基础部分。"
-                  : value.type === "星月增伤"
-                    ? "与星月精通加成相加，不与普通元素增伤混用。"
-                    : "常规直伤增伤，与对应元素/物理面板加成、易伤、减伤在同一个括号合并；星月直伤不使用此区。"}
+              ? "直接填写系数，例如1.7表示技能基础伤害×1.7，然后再加入基础值加成；不会放大羽毛等附加伤害。多个效果分别相乘，变层数效果按系数的层数次方计算。普通和星月直伤均适用。"
+              : value.type === "独立乘区Pro"
+                ? "直接填写系数，例如1.2表示所有伤害计算后再×1.2，包含基础值加成。多个效果最终累乘，变层数效果每层乘一次（3层1.2为1.2³）。普通和星月直伤均适用。"
+                : value.type === "擢升"
+                  ? "填写擢升百分数；所有生效且匹配的擢升相加。10% + 5% 对应最终系数 1 + 15% = 1.15。支持基础、局外、实时变量及条件公式。"
+                  : value.type === "星月基础提升"
+                    ? "只放大星月直伤的属性×倍率基础部分。"
+                    : value.type === "星月增伤"
+                      ? "与星月精通加成相加，不与普通元素增伤混用。"
+                      : "常规直伤增伤，与对应元素/物理面板加成、易伤、减伤在同一个括号合并；星月直伤不使用此区。"}
         </p>
       )}
       {value.type === "敌方抗性" && (
@@ -876,14 +882,14 @@ export function EffectEditor({
             value={value.type === "擢升" ? "percent" : effectUnit(value)}
             disabled={
               value.type === "擢升" ||
-              value.type === "独立乘区" ||
+              isIndependentEffect(value.type) ||
               usesDirectVariableValue(value)
             }
             onChange={(e) => update({ unit: e.target.value as Effect["unit"] })}
           >
             <option value="percent">百分比（%）</option>
             <option value="flat">
-              {value.type === "独立乘区" ? "系数（×）" : "固定数值"}
+              {isIndependentEffect(value.type) ? "系数（×）" : "固定数值"}
             </option>
           </select>
         </Field>
@@ -892,17 +898,17 @@ export function EffectEditor({
         <Field
           label={stacking ? "每层效果数值" : "效果数值"}
           hint={
-            value.type === "独立乘区"
+            isIndependentEffect(value.type)
               ? "填写非负系数，1表示不变"
               : "支持正数与负数"
           }
         >
           <Num
-            min={value.type === "独立乘区" ? 0 : undefined}
+            min={isIndependentEffect(value.type) ? 0 : undefined}
             value={value.value}
             onChange={(v) => update({ value: v })}
             unit={
-              value.type === "独立乘区"
+              isIndependentEffect(value.type)
                 ? "×"
                 : effectUnit(value) === "percent"
                   ? "%"
@@ -999,8 +1005,10 @@ export function EffectEditor({
                 ? `，结果直接作为${value.type}增加值（结果20表示增加20点），不再按百分比乘基础属性。`
                 : effectUnit(value) === "percent"
                   ? "，结果按百分比使用（结果20表示20%）。"
-                  : value.type === "独立乘区"
-                    ? "，结果直接作为最终乘数（结果1.2表示×1.2）。"
+                  : isIndependentEffect(value.type)
+                    ? value.type === "独立乘区Pro"
+                      ? "，结果直接作为最终乘数（结果1.2表示最终伤害×1.2）。"
+                      : "，结果直接作为技能基础伤害乘数（结果1.2表示基础伤害×1.2，再加入附加伤害）。"
                     : "，结果直接作为数值使用。"}
             </p>
           )}
@@ -1144,7 +1152,7 @@ export function EffectFold({
 export function effectSummary(e: Effect) {
   const value =
     e.valueMode === "number"
-      ? `${e.value > 0 && e.type !== "独立乘区" ? "+" : ""}${fmt(e.value)}${effectUnit(e) === "percent" ? "%" : ""}`
+      ? `${e.value > 0 && !isIndependentEffect(e.type) ? "+" : ""}${fmt(e.value)}${effectUnit(e) === "percent" ? "%" : ""}`
       : `${VALUE_MODES[e.valueMode]} · ${e.variableStat} ${e.advanced ? `条件公式(${e.formulas.length}条)` : `× ${fmt(e.coefficient)}`}${effectUnit(e) === "percent" ? "%" : ""}`;
   const target = isEnemyEffect(e.type)
     ? "敌方"
@@ -1157,7 +1165,7 @@ export function effectSummary(e: Effect) {
           : e.target === "elements"
             ? `${e.targetElements.join("/")}角色`
             : `${e.targetIds.length} 个角色`;
-  return `${target} · ${!isGlobalEffect(e) && isStackingEffect(e) ? "每层 " : ""}${effectTypeName(e.type)} ${e.type === "独立乘区" ? "× " : ""}${value}${isGlobalEffect(e) && e.outsideActive ? " · 局外生效" : ""}`;
+  return `${target} · ${!isGlobalEffect(e) && isStackingEffect(e) ? "每层 " : ""}${effectTypeName(e.type)} ${isIndependentEffect(e.type) ? "× " : ""}${value}${isGlobalEffect(e) && e.outsideActive ? " · 局外生效" : ""}`;
 }
 
 export function effectDurationSummary(e: Effect) {

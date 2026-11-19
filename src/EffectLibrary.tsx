@@ -14,6 +14,7 @@ import {
   REALTIME_KINDS,
   effect,
   effectTargetValid,
+  isIndependentEffect,
   type Effect,
   type Project,
 } from "./model";
@@ -157,7 +158,7 @@ export default function EffectLibrary({
               disabled={
                 !effectTargetValid(draft) ||
                 !!effectFormulaError(draft) ||
-                (draft.type === "独立乘区" &&
+                (isIndependentEffect(draft.type) &&
                   draft.valueMode === "number" &&
                   draft.value < 0)
               }

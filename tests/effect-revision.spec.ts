@@ -1,7 +1,83 @@
 import { test, expect, type Page } from "@playwright/test";
-import { newProject, skill, STORAGE_KEY, type Project } from "../src/model";
+import {
+  effect,
+  newProject,
+  skill,
+  STORAGE_KEY,
+  type Project,
+} from "../src/model";
 const nav = (page: Page, name: string) =>
   page.locator("nav").getByRole("button", { name }).click();
+
+test("original factors exclude feather damage while Pro scales the complete worker result and survives reload", async ({
+  page,
+}) => {
+  const p = newProject(),
+    c = p.characters[0];
+  Object.assign(c, { atk: 1689, critRate: 0 });
+  p.enemy.level = 90;
+  p.skills = [{ ...skill(c.id), name: "普攻" }];
+  p.timeline = [
+    { id: "hit", kind: "skill", skillId: p.skills[0].id, time: 10 },
+  ];
+  p.globals = [
+    {
+      ...effect(c.id),
+      category: "global",
+      type: "独立乘区",
+      value: 1.7,
+      unit: "flat",
+    },
+    {
+      ...effect(c.id),
+      category: "global",
+      type: "基础值加成",
+      value: 3500,
+      unit: "flat",
+    },
+  ];
+  await load(page, p);
+  await nav(page, "计算结果");
+  await page.getByRole("button", { name: "开始计算", exact: true }).click();
+  await expect(page.getByTestId("total-damage")).toHaveText("3,105");
+  await nav(page, "效果列表");
+  await page.getByRole("button", { name: "添加独立效果", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog
+    .getByRole("combobox", { name: "效果类型", exact: true })
+    .selectOption("独立乘区Pro");
+  await expect(dialog.getByLabel("效果数值", { exact: false })).toHaveValue(
+    "1",
+  );
+  await expect(
+    dialog.getByRole("combobox", { name: "数值单位", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    dialog.locator(".formula-note").filter({ hasText: "包含基础值加成" }),
+  ).toContainText("包含基础值加成");
+  await dialog.getByLabel("效果名称", { exact: true }).fill("最终累乘");
+  await dialog.getByLabel("效果数值", { exact: false }).fill("1.2");
+  await dialog.getByRole("button", { name: "确认添加", exact: true }).click();
+  await page.reload();
+  await nav(page, "计算结果");
+  await page.getByRole("button", { name: "开始计算", exact: true }).click();
+  await expect(page.getByTestId("total-damage")).toHaveText("3,726");
+  await page.locator(".damage-details details > summary").click();
+  await expect(page.locator(".factor-list")).toContainText(
+    "独立乘区Pro系数（最终累乘）1.2 = 1.2",
+  );
+  await expect(page.locator(".final-formula")).toContainText(
+    "(2,000 × 1.7 + 3,500)",
+  );
+  await expect(page.locator(".final-formula")).toContainText("× 1.2");
+  expect(
+    await page.evaluate(
+      (key) => JSON.parse(localStorage.getItem(key)!).customEffects[0].type,
+      STORAGE_KEY,
+    ),
+  ).toBe("独立乘区Pro");
+});
+
 async function load(page: Page, p: Project) {
   await page.goto("/");
   await page.getByLabel("导入方案文件", { exact: true }).setInputFiles({
@@ -109,6 +185,9 @@ test("custom draft cancels cleanly, confirms once, supports no actor and factors
     "基础增伤 【造成的伤害提升 X%】",
   );
   await expect(type.locator('option[value="倍率区"]')).toHaveText("改变倍率");
+  await expect(type.locator('option[value="独立乘区Pro"]')).toHaveText(
+    "独立乘区Pro 【直接在所有伤害计算后累乘】",
+  );
   await expect(type.locator('option[value="星月额外提升"]')).toHaveCount(0);
   await expect(type.locator('option[value="基础值加成"]')).toHaveText(
     "基础值加成 / 星月额外提升 【造成的伤害提高 X】",

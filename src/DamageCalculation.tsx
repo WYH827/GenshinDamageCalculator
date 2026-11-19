@@ -102,6 +102,12 @@ export default function DamageCalculation({
         : "1（无独立乘区效果）",
     ],
     [
+      "独立乘区Pro系数（最终累乘）",
+      b.independentProFactors.length
+        ? `${b.independentProFactors.map((x) => fmt(x)).join(" × ")} = ${fmt(b.independentProFactor)}`
+        : "1（无独立乘区Pro效果）",
+    ],
+    [
       `${r.skill.damage.element}抗性`,
       `${fmt(b.resistance)}% → 抗性系数 ${fmt(b.resistanceFactor)}`,
     ],
@@ -143,7 +149,8 @@ export default function DamageCalculation({
         ))}
       </dl>
       <p className="final-formula">
-        期望伤害 = ({fmt(b.base)} + {fmt(b.baseAdd)})
+        期望伤害 = ({fmt(b.base)} × {fmt(b.independentFactor)} +{" "}
+        {fmt(b.baseAdd)})
         {b.family === "normal" ? ` × ${fmt(b.bonusFactor)}` : ""} ×{" "}
         {fmt(b.resistanceFactor)}
         {b.family === "normal"
@@ -151,7 +158,8 @@ export default function DamageCalculation({
           : ` × ${fmt(b.uplift)}`}{" "}
         × {fmt(b.critFactor)}
         {b.amplification ? ` × ${fmt(b.amplificationFactor)}` : ""}
-        {` × ${fmt(b.independentFactor)}`} = <strong>{fmt(r.expected!)}</strong>
+        {` × ${fmt(b.independentProFactor)}`} ={" "}
+        <strong>{fmt(r.expected!)}</strong>
       </p>
       <p className="input-note">
         展示值按小数格式化；实际计算和总计使用未截断的数值。效果来源与参与状态见下方。

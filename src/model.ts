@@ -124,6 +124,7 @@ export const EFFECT_TYPES = [
   "擢升",
   "增幅反应增伤",
   "独立乘区",
+  "独立乘区Pro",
 ] as const;
 export const DAMAGE_EFFECTS = [
   "增伤区",
@@ -138,7 +139,10 @@ export const DAMAGE_EFFECTS = [
   "擢升",
   "增幅反应增伤",
   "独立乘区",
+  "独立乘区Pro",
 ] as const;
+export const isIndependentEffect = (type: string) =>
+  type === "独立乘区" || type === "独立乘区Pro";
 export const effectTypeName = (type: Effect["type"]) =>
   type === "增伤区"
     ? "基础增伤"
@@ -156,6 +160,7 @@ export const effectTypeNote = (type: Effect["type"]) => {
   if (type === "减伤") return "【目标受到的伤害降低 X%】";
   if (type === "星月基础提升") return "【造成的XXX反应的基础伤害提升 X%】";
   if (type === "独立乘区") return "【造成原本 X% 的伤害】";
+  if (type === "独立乘区Pro") return "【直接在所有伤害计算后累乘】";
   return "";
 };
 export const isEnemyEffect = (type: string) =>
@@ -966,7 +971,7 @@ export const usesDirectVariableValue = (
 export const effectUnit = (
   e: Pick<Effect, "type" | "valueMode" | "unit">,
 ): Effect["unit"] =>
-  usesDirectVariableValue(e) || e.type === "独立乘区" ? "flat" : e.unit;
+  usesDirectVariableValue(e) || isIndependentEffect(e.type) ? "flat" : e.unit;
 
 export const STAR_SUPERCONDUCT_TABLE = [
   { stacks: 1, energy: 0, bonus: 20, coefficient: 1 },

@@ -93,7 +93,7 @@ describe("ascension and custom artifact mains", () => {
       goblet: 21,
       circlet: 25,
     };
-    expect(artifactMainStat(a, "sands").value).toBe(187);
+    expect(artifactMainStat(a, "sands").value).toBe(186.5);
     a.mainStat20 = {
       flower: false,
       feather: false,
@@ -147,14 +147,14 @@ describe("expanded import options", () => {
     expect(c).toMatchObject({ name: "安柏", level: 95, constellation: 4 });
     expect(c.weapon?.substats?.[0]).toMatchObject({
       type: "recharge",
-      value: 30.6,
+      value: 30.626819800000003,
     });
     expect(c.artifacts?.mainStat20).toMatchObject({
       sands: true,
       flower: false,
       feather: false,
     });
-    expect(c.artifacts?.importedMainStats.sands?.value).toBe(187);
+    expect(c.artifacts?.importedMainStats.sands?.value).toBe(186.5);
     const p = newProject();
     const next = applyQuickImport(p, c, p.characters[1].id, {
       characterName: true,

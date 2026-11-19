@@ -18,6 +18,7 @@ import { realtimeTimeline } from "./realtime-state";
 import { defaultTiming, eventTiming } from "./effect-catalog";
 import { parseProject, parsePreset } from "./storage";
 import { boundedActiveFor } from "./schedule";
+import { staticPanels } from "./panels";
 describe("verified Enka data and batch import", () => {
   it("uses raw base HP/DEF and subtracts precise weapon attack, not final panel attack", () => {
     const account = parseEnkaImport(fixture);
@@ -30,6 +31,11 @@ describe("verified Enka data and batch import", () => {
     const curves = reference.curves as Record<string, number[]>;
     const weapon = w.base * curves[w.curve][89] + w.promote[6];
     expect(c.baseStats?.atk).toBeCloseTo(raw.fightPropMap["4"] - weapon, 8);
+    expect(c.weapon?.atk).toBe(weapon);
+    expect(c.baseStats!.atk + c.weapon!.atk).toBe(raw.fightPropMap["4"]);
+    expect(
+      c.artifacts?.substats.find((s) => s.type === "mastery")?.value,
+    ).toBeCloseTo(39.63, 8);
     expect(c.baseStats!.atk).toBeGreaterThan(220);
     expect(c.baseStats!.atk).toBeLessThan(225);
     expect(c.avatarUrl).toContain("UI_AvatarIcon_Side_Ambor");
@@ -56,6 +62,12 @@ describe("verified Enka data and batch import", () => {
     expect(next.weapons[0].iconUrl).toBe(c.weapon?.iconUrl);
     expect(next.artifacts[0].iconUrls).toEqual(c.artifacts?.iconUrls);
     const saved = parseProject(next);
+    expect(staticPanels(saved, saved.characters[0].id).base["攻击力"]).toBe(
+      raw.fightPropMap["4"],
+    );
+    expect(
+      staticPanels(saved, saved.characters[0].id).outside["元素精通"],
+    ).toBeCloseTo(39.63, 8);
     expect(parseProject(saved)).toEqual(saved);
     expect(saved.characters[0].avatarUrl).toBe(c.avatarUrl);
     expect(
@@ -73,6 +85,25 @@ describe("verified Enka data and batch import", () => {
       ]),
     ).toThrow("匹配一次");
     expect(p.characters[0].name).toBe("");
+  });
+  it("retains displayed substats when roll IDs are unknown or inconsistent", () => {
+    const raw = structuredClone(fixture);
+    const piece = raw.avatarInfoList[0].equipList.find((e) => e.reliquary)!;
+    const base = parseEnkaImport(raw).characters[0].artifacts!.substats;
+    piece.reliquary!.appendPropIdList[0] = 999999;
+    const fallback = parseEnkaImport(raw).characters[0].artifacts!.substats;
+    const exactDef = base.find((s) => s.type === "def")!.value;
+    expect(fallback.find((s) => s.type === "def")!.value).not.toBe(exactDef);
+    piece.reliquary!.appendPropIdList =
+      fixture.avatarInfoList[0].equipList.find(
+        (e) => e.reliquary,
+      )!.reliquary!.appendPropIdList;
+    piece.flat.reliquarySubstats![0].statValue = 999;
+    expect(
+      parseEnkaImport(raw).characters[0].artifacts!.substats.find(
+        (s) => s.type === "def",
+      )!.value,
+    ).toBeGreaterThan(999);
   });
   it("does not invent missing base stats; GOOD resolves portraits/equipment icons and allows skipping slots", () => {
     const missing = parseEnkaImport({

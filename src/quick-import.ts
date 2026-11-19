@@ -1,5 +1,6 @@
 import { z } from "zod";
 import reference from "./data/import-reference.json";
+import relicAffixes from "./data/relic-affixes.json";
 import {
   ALL_STATS,
   MAIN_SLOTS,
@@ -225,8 +226,56 @@ const mainTable = reference.relicLevels as Record<
   Record<string, Record<string, number>>
 >;
 const curves = reference.curves as Record<string, number[]>;
-const round = (x: number, percent: boolean) =>
-  percent ? Math.round((x + 1e-9) * 10) / 10 : Math.round(x + 1e-9);
+function preciseMainValue(
+  key: string,
+  value: number,
+  rarity?: number,
+  level?: number,
+) {
+  const prop = props[key];
+  const exact =
+    prop && rarity !== undefined && level !== undefined
+      ? mainTable[String(rarity)]?.[String(level + 1)]?.[prop[1]]
+      : undefined;
+  return exact === undefined
+    ? value
+    : exact * (ALL_STATS[prop[0]].percent ? 100 : 1);
+}
+// Roll IDs retain the original values even when Enka's display values are rounded.
+// Only recover them when every ID is known and the result agrees with every stat.
+function preciseArtifactSubs(
+  displayed: { key: string; value: number }[],
+  ids?: number[],
+) {
+  if (!ids?.length) return displayed;
+  const affixes = relicAffixes as Record<
+    string,
+    { prop: number; value: number }
+  >;
+  const sums = new Map<string, number>();
+  for (const id of ids) {
+    const affix = affixes[String(id)];
+    const key =
+      affix &&
+      Object.keys(props).find((key) => props[key][1] === String(affix.prop));
+    if (!affix || !key) return displayed;
+    const value = affix.value * (ALL_STATS[props[key][0]].percent ? 100 : 1);
+    sums.set(key, (sums.get(key) ?? 0) + value);
+  }
+  if (
+    sums.size !== displayed.length ||
+    displayed.some((stat) => {
+      const exact = sums.get(stat.key);
+      const type = props[stat.key]?.[0];
+      const tolerance = type && ALL_STATS[type].percent ? 0.05 : 0.5;
+      return (
+        exact === undefined || Math.abs(exact - stat.value) > tolerance + 1e-8
+      );
+    })
+  )
+    return displayed;
+  return displayed.map((stat) => ({ ...stat, value: sums.get(stat.key)! }));
+}
 function mainValue(key: string, value: number): MainValue {
   const prop = props[key];
   if (!prop) throw new Error(`暂不识别主词条：${key}`);
@@ -366,7 +415,7 @@ function combineArtifacts(
       id: uid(),
       type,
       mode: "direct",
-      value: Math.round(value * 1e6) / 1e6,
+      value,
     })),
     pieces: pieces.map((p) => p.label),
   };
@@ -389,10 +438,7 @@ function goodArtifacts(
         rarity: a.rarity,
         setName: goodSetName(a.setKey),
         setIcon: setIconForName(goodSetName(a.setKey)),
-        main: mainValue(
-          a.mainStatKey,
-          round(value * (percent ? 100 : 1), percent),
-        ),
+        main: mainValue(a.mainStatKey, value * (percent ? 100 : 1)),
         subs: a.substats,
         label: `${MAIN_SLOTS[slots[a.slotKey]] ?? a.slotKey} · ${a.rarity}星 +${a.level} · ${a.setKey ?? ""}`,
       };
@@ -418,7 +464,7 @@ function goodWeaponValue(
     name: ref.name,
     iconUrl: ref.iconUrl,
     level: w.level,
-    atk: Math.round(ref.base * curve + promote),
+    atk: ref.base * curve + promote,
     ...weaponSubstats(
       Object.entries(ref.subProps ?? {}).map(([id, value]) => {
         const type = Object.values(props).find(([, prop]) => prop === id)?.[0];
@@ -426,10 +472,7 @@ function goodWeaponValue(
         if (!type || growth === undefined) return { type: undefined, value: 0 };
         return {
           type,
-          value: round(
-            value * growth * (ALL_STATS[type].percent ? 100 : 1),
-            ALL_STATS[type].percent,
-          ),
+          value: value * growth * (ALL_STATS[type].percent ? 100 : 1),
         };
       }),
     ),
@@ -519,7 +562,9 @@ const flatStat = z.object({
 });
 const enkaEquip = z.object({
   weapon: z.object({ level: int, promoteLevel: int.optional() }).optional(),
-  reliquary: z.object({ level: int }).optional(),
+  reliquary: z
+    .object({ level: int, appendPropIdList: z.array(int).max(20).optional() })
+    .optional(),
   flat: z.object({
     itemType: text,
     equipType: text.optional(),
@@ -616,11 +661,22 @@ export function parseEnkaImport(input: unknown): ImportAccount {
                     >
                   )[String(e.flat.setId)]?.icon ??
                   undefined,
-                main: mainValue(key, main.statValue),
-                subs: e.flat.reliquarySubstats.map((s) => ({
-                  key: enkaProps[s.appendPropId ?? ""] ?? "未知词条",
-                  value: s.statValue,
-                })),
+                main: mainValue(
+                  key,
+                  preciseMainValue(
+                    key,
+                    main.statValue,
+                    e.flat.rankLevel,
+                    e.reliquary.level - 1,
+                  ),
+                ),
+                subs: preciseArtifactSubs(
+                  e.flat.reliquarySubstats.map((s) => ({
+                    key: enkaProps[s.appendPropId ?? ""] ?? "未知词条",
+                    value: s.statValue,
+                  })),
+                  e.reliquary.appendPropIdList,
+                ),
                 label: `${MAIN_SLOTS[slots[e.flat.equipType]]} · ${e.flat.rankLevel ?? "?"}星 +${e.reliquary.level - 1}`,
               };
             }),
@@ -684,6 +740,34 @@ export function parseEnkaImport(input: unknown): ImportAccount {
         baseRef && growth !== undefined && extra !== undefined
           ? baseRef.base * growth + extra
           : undefined;
+      if (row.weapon && preciseWeapon !== undefined) {
+        row.weapon.atk = preciseWeapon;
+        const name = (reference.weaponNames as Record<string, string>)[
+          String(weapon?.flat.nameTextMapHash)
+        ];
+        const subRef =
+          name && Object.values(weaponRef).find((w) => w.name === name);
+        if (subRef) {
+          const exactSubstats = Object.entries(subRef.subProps).map(
+            ([id, value]) => {
+              const type = Object.values(props).find(
+                ([, prop]) => prop === id,
+              )?.[0];
+              const curve =
+                curves[String(subRef.subCurves[id])]?.[row.weapon!.level - 1];
+              return {
+                type,
+                value:
+                  type && curve !== undefined
+                    ? value * curve * (ALL_STATS[type].percent ? 100 : 1)
+                    : NaN,
+              };
+            },
+          );
+          if (exactSubstats.every((s) => s.type && Number.isFinite(s.value)))
+            Object.assign(row.weapon, weaponSubstats(exactSubstats));
+        }
+      }
       const ascension = z
         .object({ val: z.coerce.number() })
         .safeParse(c.propMap?.["1002"]);

@@ -122,7 +122,7 @@ describe("main stats, ignored stats, and imports", () => {
       atkPercent: 46.6,
       hpPercent: 46.6,
       defPercent: 58.3,
-      mastery: 187,
+      mastery: 186.5,
       critRate: 31.1,
       critDamage: 62.2,
       physicalBonus: 58.3,

@@ -61,7 +61,7 @@ test("GOOD preview, independent checkboxes, target slots, cancel, exact artifact
   );
   await expect(dialog.locator(".quick-import-preview")).toContainText("645");
   await expect(dialog.locator(".quick-import-preview")).toContainText("46.6%");
-  await expect(dialog.locator(".quick-import-preview")).toContainText("565");
+  await expect(dialog.locator(".quick-import-preview")).toContainText("564.7837244");
   await dialog.getByLabel("来源角色", { exact: true }).selectOption("Bennett");
   await expect(
     dialog.getByLabel("导入武器主词条", { exact: true }),
@@ -121,7 +121,9 @@ test("GOOD preview, independent checkboxes, target slots, cancel, exact artifact
     .getByLabel("导入圣遗物主词条与副词条", { exact: true })
     .uncheck();
   await dialog.getByRole("button", { name: "确认导入", exact: true }).click();
-  await expect.poll(async () => (await saved(page)).weapons[1].atk).toBe(565);
+  await expect
+    .poll(async () => (await saved(page)).weapons[1].atk)
+    .toBeCloseTo(564.7837244, 8);
   const after = await saved(page);
   expect(after.artifacts).toEqual(before.artifacts);
   expect(after.weapons[0].atk).toBe(111);

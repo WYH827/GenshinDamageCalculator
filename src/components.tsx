@@ -413,7 +413,7 @@ export function SubstatEditor({
                     value:
                       mode === "direct"
                         ? statValue(s)
-                        : Number((s.value / (meta.average ?? 1)).toFixed(6)),
+                        : s.value / (meta.average ?? 1),
                   });
                 }}
               >

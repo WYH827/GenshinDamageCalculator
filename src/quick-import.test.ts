@@ -99,7 +99,7 @@ describe("GGScanner and Enka quick import", () => {
     const data = parseGoodImport(raw),
       c = data.characters[0];
     expect(c.name).toBe("安柏");
-    expect(c.weapon?.atk).toBe(565);
+    expect(c.weapon?.atk).toBeCloseTo(564.7837244, 8);
     expect(
       c.artifacts?.substats.find((s) => s.type === "critRate")?.value,
     ).toBe(19.5);
@@ -149,7 +149,7 @@ describe("GGScanner and Enka quick import", () => {
     const before = parseGoodImport(raw).characters[0].weapon!.atk;
     raw.weapons[0].ascension = 1;
     const after = parseGoodImport(raw).characters[0].weapon!.atk;
-    expect(after - before).toBe(25);
+    expect(after - before).toBeCloseTo(25.9, 10);
     raw.weapons[0].level = 90;
     expect(parseGoodImport(raw).characters[0].weapon).toBeUndefined();
   });
@@ -191,7 +191,7 @@ describe("GGScanner and Enka quick import", () => {
       expect(next.artifacts[2].effects).toEqual(p.artifacts[2].effects);
       expect(next.weapons[2].effects).toEqual(p.weapons[2].effects);
       expect(next.weapons[2].substats).toEqual(p.weapons[2].substats);
-      expect(next.weapons[2].atk).toBe(weapon ? 565 : 0);
+      expect(next.weapons[2].atk).toBe(weapon ? 564.7837244 : 0);
       expect(next.artifacts[2].mainStat20 !== undefined).toBe(artifacts);
       const restored = parseProject(JSON.parse(JSON.stringify(next)));
       expect(restored.artifacts[2].mainStats).toEqual(

@@ -350,7 +350,7 @@ export const MAIN_STAT_VALUES = {
   atkPercent: 46.6,
   hpPercent: 46.6,
   defPercent: 58.3,
-  mastery: 187,
+  mastery: 186.5,
   critRate: 31.1,
   critDamage: 62.2,
   pyroBonus: 46.6,
@@ -721,11 +721,7 @@ export function newProject(): Project {
 export const statValue = (s: Substat) => {
   if (s.type === "notImportant") return 0;
   const average = ALL_STATS[s.type].average;
-  return Number(
-    (s.value * (s.mode === "rolls" && average !== null ? average : 1)).toFixed(
-      6,
-    ),
-  );
+  return s.value * (s.mode === "rolls" && average !== null ? average : 1);
 };
 export const fmt = (n: number) =>
   new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 3 }).format(n);

@@ -49,6 +49,24 @@ describe("parameter model", () => {
     expect(
       statValue({ id: uid(), type: "mastery", mode: "rolls", value: 1.9 }),
     ).toBe(38));
+  it("preserves supplied precision beyond six decimals", () => {
+    expect(
+      statValue({
+        id: uid(),
+        type: "atk",
+        mode: "direct",
+        value: 52.519999999999996,
+      }),
+    ).toBe(52.519999999999996);
+    expect(
+      statValue({
+        id: uid(),
+        type: "mastery",
+        mode: "direct",
+        value: 16.31999969482422,
+      }),
+    ).toBe(16.31999969482422);
+  });
   it("keeps exactly one piece of equipment per character when swapping and reordering", () => {
     const p = newProject(),
       [first, second] = p.characters;

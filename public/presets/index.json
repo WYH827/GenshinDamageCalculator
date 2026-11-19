@@ -1,4 +1,21 @@
 {
   "version": 1,
-  "presets": []
+  "presets": [
+    {
+      "id": "wyh827-sandone-odetta-arosha-sucrose",
+      "kind": "project",
+      "name": "00偶 00奥 6阿 6砂",
+      "description": "桑多涅 / 奥黛塔 / 阿罗夏 / 砂糖，包含整队配置、技能效果与时间轴。",
+      "author": "WYH827",
+      "file": "方案预设/00偶 00奥 6阿 6砂.json"
+    },
+    {
+      "id": "wyh827-skirk-furina-escoffier-voyanisha",
+      "kind": "project",
+      "name": "21丝 20勇者芙 10宗室爱 00沃",
+      "description": "丝柯克 / 芙宁娜 / 爱可菲 / 沃雅妮莎，包含整队配置、技能效果与时间轴。",
+      "author": "WYH827",
+      "file": "方案预设/21丝 20勇者芙 10宗室爱 00沃.json"
+    }
+  ]
 }

@@ -19,18 +19,21 @@ test("official presets preview and apply projects, characters and weapons while 
             kind: "project",
             name: "官方整队",
             description: "整队及时间轴",
+            author: "WYH827",
             file: "方案预设/team.json",
           },
           {
             id: "c",
             kind: "character",
             name: "官方角色",
+            author: "WYH827",
             file: "角色/character.json",
           },
           {
             id: "w",
             kind: "weapon",
             name: "官方武器",
+            author: "WYH827",
             file: "武器/weapon.json",
           },
         ],
@@ -54,6 +57,7 @@ test("official presets preview and apply projects, characters and weapons while 
   await page.getByRole("button", { name: "导入预设", exact: true }).click();
   let d = page.getByRole("dialog");
   await d.getByRole("tab", { name: "从官方预设库导入", exact: true }).click();
+  await expect(d.locator(".official-preset-card")).toContainText("作者：WYH827");
   await d.locator(".official-preset-card").click();
   await expect(d.locator(".official-preview")).toContainText("攻击 300");
   await d.getByRole("button", { name: "应用官方预设", exact: true }).click();
@@ -102,6 +106,9 @@ test("official presets preview and apply projects, characters and weapons while 
 test("empty official library and invalid imports give recoverable messages", async ({
   page,
 }) => {
+  await page.route("**/presets/index.json", (route) =>
+    route.fulfill({ json: { version: 1, presets: [] } }),
+  );
   await page.goto("/");
   await page
     .getByRole("button", { name: "从官方预设库导入", exact: true })

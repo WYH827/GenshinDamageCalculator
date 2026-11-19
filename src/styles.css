@@ -144,6 +144,13 @@ dialog::backdrop {
   border-radius: 13px 3px 13px 3px;
   box-shadow: inset 0 0 0 5px #ffffff09;
 }
+.brand-symbol > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
 .brand > span:last-child {
   font-size: 22px;
   font-weight: 650;

@@ -525,7 +525,7 @@ export default function App() {
             }}
           >
             <span className="brand-symbol">
-              <Sparkles size={25} strokeWidth={1.5} />
+              <img src={`${import.meta.env.BASE_URL}site-icon.jpg`} alt="" />
             </span>
             <span>
               提瓦特<span>DAMAGE STUDIO</span>

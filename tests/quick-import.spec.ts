@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { STORAGE_KEY } from "../src/model";
+import { chooseEnkaProvider } from "./enka-provider";
 const nav = (page: Page, name: string) =>
   page.locator("nav").getByRole("button", { name }).click();
 const good = {
@@ -37,12 +38,14 @@ const good = {
     },
   ],
 };
-const loadFile = (page: Page, data: unknown = good) =>
-  page.getByLabel("快速导入JSON").setInputFiles({
+const loadFile = async (page: Page, data: unknown = good) => {
+  await page.getByRole("tab", { name: "GGScanner JSON", exact: true }).click();
+  await page.getByLabel("快速导入JSON").setInputFiles({
     name: "GGScanner.json",
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(data)),
   });
+};
 const saved = (page: Page) =>
   page.evaluate((key) => JSON.parse(localStorage.getItem(key)!), STORAGE_KEY);
 
@@ -61,7 +64,9 @@ test("GOOD preview, independent checkboxes, target slots, cancel, exact artifact
   );
   await expect(dialog.locator(".quick-import-preview")).toContainText("645");
   await expect(dialog.locator(".quick-import-preview")).toContainText("46.6%");
-  await expect(dialog.locator(".quick-import-preview")).toContainText("564.7837244");
+  await expect(dialog.locator(".quick-import-preview")).toContainText(
+    "564.7837244",
+  );
   await dialog.getByLabel("来源角色", { exact: true }).selectOption("Bennett");
   await expect(
     dialog.getByLabel("导入武器主词条", { exact: true }),
@@ -179,9 +184,7 @@ test("Enka UID response, hidden showcase and HTTP failures, invalid JSON and can
   await loadFile(page, { invalid: true });
   await expect(page.getByRole("alert")).toContainText("GOOD");
   await page.getByRole("tab", { name: "Enka UID" }).click();
-  await page
-    .getByLabel("UID查询接口", { exact: true })
-    .selectOption("cloudflare");
+  await chooseEnkaProvider(page, "cloudflare");
   await page.getByLabel("原神UID", { exact: true }).fill("abc");
   await page.getByRole("button", { name: "读取账号", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("9或10位");
@@ -206,9 +209,7 @@ test("Enka UID response, hidden showcase and HTTP failures, invalid JSON and can
   await expect.poll(async () => (await saved(page)).weapons[0].atk).toBe(674);
   await page.getByRole("button", { name: "快速导入", exact: true }).click();
   await page.getByRole("tab", { name: "Enka UID" }).click();
-  await page
-    .getByLabel("UID查询接口", { exact: true })
-    .selectOption("cloudflare");
+  await chooseEnkaProvider(page, "cloudflare");
   await page.getByLabel("原神UID", { exact: true }).fill("618285856");
   await page.route("**/api/enka/**", (route) =>
     route.fulfill({ json: { playerInfo: { nickname: "hidden" } } }),
@@ -272,9 +273,9 @@ test("source effect editors start folded, including newly added effects", async 
   await expect(page.locator(".effect-form")).toBeHidden();
 });
 
-test("MicroGG page proxy is the default and switching providers clears the preview and cancels old requests", async ({
+test("UID starts first, provider labels render cleanly and switching clears the preview and cancels old requests", async ({
   page,
-}) => {
+}, info) => {
   const response = {
     uid: "618285856",
     playerInfo: { nickname: "MicroGG" },
@@ -292,21 +293,35 @@ test("MicroGG page proxy is the default and switching providers clears the previ
   );
   await page.goto("/");
   await page.getByRole("button", { name: "快速导入", exact: true }).click();
-  await page.getByRole("tab", { name: "Enka UID" }).click();
-  await expect(page.getByLabel("UID查询接口", { exact: true })).toHaveValue(
-    "cloudflare-page",
+  await expect(page.getByRole("tab")).toHaveText([
+    "Enka UID",
+    "GGScanner JSON",
+  ]);
+  await expect(page.getByRole("tab", { name: "Enka UID" })).toHaveAttribute(
+    "aria-selected",
+    "true",
   );
-  await expect(
-    page.getByLabel("UID查询接口", { exact: true }).locator("option"),
-  ).toHaveCount(6);
-  const providers = page.getByLabel("UID查询接口", { exact: true });
-  const rows = await providers.locator("option").evaluateAll((options) =>
-    options.map((option) => ({
-      value: (option as HTMLOptionElement).value,
-      struck: option.textContent!.includes("\u0336"),
-      disabled: (option as HTMLOptionElement).disabled,
-    })),
-  );
+  await expect(page.getByLabel("快速导入JSON")).toHaveCount(0);
+  const providers = page.getByRole("combobox", {
+    name: "UID查询接口",
+    exact: true,
+  });
+  await expect(providers).toHaveAttribute("data-value", "cloudflare-page");
+  await providers.click();
+  await expect(page.getByRole("listbox").getByRole("option")).toHaveCount(6);
+  const rows = await page
+    .getByRole("listbox")
+    .getByRole("option")
+    .evaluateAll((options) =>
+      options.map((option) => ({
+        value: (option as HTMLElement).dataset.value,
+        text: option.textContent,
+        struck:
+          getComputedStyle(option.querySelector("span")!).textDecorationLine ===
+          "line-through",
+        disabled: option.getAttribute("aria-disabled") === "true",
+      })),
+    );
   expect(rows.filter((row) => row.struck).map((row) => row.value)).toEqual([
     "cloudflare-microgg",
     "microgg",
@@ -314,17 +329,42 @@ test("MicroGG page proxy is the default and switching providers clears the previ
     "page",
   ]);
   expect(rows.every((row) => !row.disabled)).toBe(true);
+  expect(rows.every((row) => !/[\u0336\ufffd]/.test(row.text!))).toBe(true);
+  await page
+    .getByRole("dialog")
+    .screenshot({ path: info.outputPath("uid-provider-desktop.png") });
+  // Closing the popup must keep the import dialog open.
+  await providers.press("Escape");
+  await expect(providers).toHaveAttribute("aria-expanded", "false");
+  await expect(page.getByRole("dialog")).toBeVisible();
   for (const row of rows) {
-    await providers.selectOption(row.value);
-    await expect(providers).toHaveValue(row.value);
+    await providers.click();
+    await page
+      .locator(`.enka-provider-option[data-value="${row.value}"]`)
+      .click();
+    await expect(providers).toHaveAttribute("data-value", row.value!);
   }
-  await page.getByLabel("UID查询接口", { exact: true }).selectOption("microgg");
+  await providers.focus();
+  await providers.press("Home");
+  await providers.press("ArrowDown");
+  await providers.press("Enter");
+  await expect(providers).toHaveAttribute("data-value", "cloudflare");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await providers.click();
+  await expect(page.getByRole("listbox").getByRole("option")).toHaveCount(6);
+  const bounds = await page.getByRole("listbox").boundingBox();
+  expect(bounds!.x).toBeGreaterThanOrEqual(0);
+  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(390);
+  await page
+    .getByRole("dialog")
+    .screenshot({ path: info.outputPath("uid-provider-mobile.png") });
+  await page.getByRole("heading", { name: "快速导入装备" }).click();
+  await expect(providers).toHaveAttribute("aria-expanded", "false");
+  await chooseEnkaProvider(page, "microgg");
   await page.getByLabel("原神UID", { exact: true }).fill("618285856");
   await page.getByRole("button", { name: "读取账号", exact: true }).click();
   await expect(page.getByRole("dialog")).toContainText("MicroGG · 1个角色");
-  await page
-    .getByLabel("UID查询接口", { exact: true })
-    .selectOption("cloudflare");
+  await chooseEnkaProvider(page, "cloudflare");
   await expect(page.getByLabel("来源角色", { exact: true })).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "确认导入", exact: true }),
@@ -340,7 +380,7 @@ test("MicroGG page proxy is the default and switching providers clears the previ
   const requested = page.waitForRequest("**/api/enka/**");
   await page.getByRole("button", { name: "读取账号", exact: true }).click();
   await requested;
-  await page.getByLabel("UID查询接口", { exact: true }).selectOption("microgg");
+  await chooseEnkaProvider(page, "microgg");
   release();
   await expect(page.getByLabel("来源角色", { exact: true })).toHaveCount(0);
   await expect(

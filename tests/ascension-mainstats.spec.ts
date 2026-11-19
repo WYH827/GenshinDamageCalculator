@@ -1,3 +1,4 @@
+import { chooseEnkaProvider } from "./enka-provider";
 import { test, expect, type Page } from "@playwright/test";
 import { STORAGE_KEY } from "../src/model";
 const nav = (page: Page, name: string) =>
@@ -138,9 +139,7 @@ test("all import flags are independent, metadata and weapon substats work, UID i
   await page.getByLabel("角色名称", { exact: true }).fill("保留名称");
   await page.getByRole("button", { name: "快速导入", exact: true }).click();
   await page.getByRole("tab", { name: "Enka UID" }).click();
-  await page
-    .getByLabel("UID查询接口", { exact: true })
-    .selectOption("cloudflare");
+  await chooseEnkaProvider(page, "cloudflare");
   await page.getByLabel("原神UID", { exact: true }).fill("618285856");
   await page.getByRole("button", { name: "读取账号", exact: true }).click();
   const dialog = page.getByRole("dialog");
@@ -190,9 +189,7 @@ test("all import flags are independent, metadata and weapon substats work, UID i
   await page.reload();
   await page.getByRole("button", { name: "快速导入", exact: true }).click();
   await page.getByRole("tab", { name: "Enka UID" }).click();
-  await page
-    .getByLabel("UID查询接口", { exact: true })
-    .selectOption("cloudflare");
+  await chooseEnkaProvider(page, "cloudflare");
   await expect(page.getByLabel("原神UID", { exact: true })).toHaveValue(
     "618285856",
   );

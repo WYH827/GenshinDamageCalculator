@@ -1,11 +1,9 @@
 import CharacterVisual from "./CharacterVisual";
+import EnkaProviderSelect from "./EnkaProviderSelect";
 import {
-  ENKA_PROVIDERS,
   DEFAULT_ENKA_PROVIDER,
   isProxiedProvider,
   providerSource,
-  enkaProviderLabel,
-  isDiscouragedProvider,
   type EnkaProvider,
 } from "./site-config";
 import { ENKA_SOURCES } from "../shared/enka-sources";
@@ -50,7 +48,7 @@ export default function QuickImport({
   onClose: () => void;
   onImported: (message: string) => void;
 }) {
-  const [mode, setMode] = useState<"json" | "enka">("json"),
+  const [mode, setMode] = useState<"json" | "enka">("enka"),
     [account, setAccount] = useState<ImportAccount | null>(null);
   const [uidValue, setUid] = useState(() => {
       try {
@@ -169,19 +167,19 @@ export default function QuickImport({
       <div className="segmented" role="tablist" aria-label="快速导入方式">
         <button
           role="tab"
-          aria-selected={mode === "json"}
-          className={mode === "json" ? "active" : ""}
-          onClick={() => chooseMode("json")}
-        >
-          GGScanner JSON
-        </button>
-        <button
-          role="tab"
           aria-selected={mode === "enka"}
           className={mode === "enka" ? "active" : ""}
           onClick={() => chooseMode("enka")}
         >
           Enka UID
+        </button>
+        <button
+          role="tab"
+          aria-selected={mode === "json"}
+          className={mode === "json" ? "active" : ""}
+          onClick={() => chooseMode("json")}
+        >
+          GGScanner JSON
         </button>
       </div>
       {mode === "json" ? (
@@ -237,28 +235,16 @@ export default function QuickImport({
         </div>
       ) : (
         <div className="quick-import-source">
-          <Field label="UID查询接口">
-            <select
-              aria-label="UID查询接口"
-              className={
-                isDiscouragedProvider(provider) ? "provider-struck" : ""
-              }
-              value={provider}
-              onChange={(event) => {
-                cancelLoad();
-                setProvider(event.target.value as EnkaProvider);
-                setAccount(null);
-                setError("");
-                setOfficialOpen(false);
-              }}
-            >
-              {Object.entries(ENKA_PROVIDERS).map(([key, label]) => (
-                <option key={key} value={key} aria-label={label}>
-                  {enkaProviderLabel(key as EnkaProvider)}
-                </option>
-              ))}
-            </select>
-          </Field>
+          <EnkaProviderSelect
+            value={provider}
+            onChange={(next) => {
+              cancelLoad();
+              setProvider(next);
+              setAccount(null);
+              setError("");
+              setOfficialOpen(false);
+            }}
+          />
           <p className="input-note">划线选项目前读取受限，仍可选择尝试。</p>
           <Field label="原神UID">
             <input

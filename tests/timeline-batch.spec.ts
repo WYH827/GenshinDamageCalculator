@@ -237,6 +237,7 @@ test("preset and per-event ranges show counts, import starts fully selected and 
       }),
     ),
   };
+  await page.getByRole("tab", { name: "GGScanner JSON", exact: true }).click();
   await page.getByLabel("快速导入JSON", { exact: true }).setInputFiles({
     name: "good.json",
     mimeType: "application/json",

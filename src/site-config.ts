@@ -26,14 +26,6 @@ export type EnkaProvider = keyof typeof ENKA_PROVIDERS;
 export const DEFAULT_ENKA_PROVIDER: EnkaProvider = "cloudflare-page";
 export const isDiscouragedProvider = (provider: EnkaProvider) =>
   provider !== "cloudflare-page" && provider !== "cloudflare";
-// Native select popups do not consistently render CSS text-decoration on Windows.
-// Combining strike marks keep the crossed-out label visible in the popup too.
-export const enkaProviderLabel = (provider: EnkaProvider) =>
-  isDiscouragedProvider(provider)
-    ? Array.from(ENKA_PROVIDERS[provider], (char) =>
-        /\s/.test(char) ? char : `${char}\u0336`,
-      ).join("")
-    : ENKA_PROVIDERS[provider];
 export const providerSource = (provider: EnkaProvider): EnkaSource =>
   provider === "cloudflare"
     ? "enka"
